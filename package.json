@@ -1,0 +1,31 @@
+{
+  "name": "nerdvana",
+  "version": "1.0.0",
+  "description": "Bot discord mulifonction",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mhytas/Nerdvana.git"
+  },
+  "author": "Mhytas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mhytas/Nerdvana/issues"
+  },
+  "homepage": "https://github.com/Mhytas/Nerdvana#readme",
+  "dependencies": {
+    "canvacord": "^6.0.2",
+    "canvas": "^2.11.2",
+    "discord-canvas-easy": "^3.2.1",
+    "discord-html-transcripts": "^3.2.0",
+    "discord-player": "^6.6.7",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5",
+    "i18n": "^0.15.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^3.1.0"
+  }
+}
