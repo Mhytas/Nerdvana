@@ -16,9 +16,9 @@ module.exports = async (bot, systeme, langue) => {
         iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
     })
     .setDescription(`
-<:flag_fr:1192220383525486664> Bienvenue dans le système de configuration de la langue de <@${bot.user.id}>, pour changer la langue du bot vous pouvez cliquez sur le bouton qui correspond juste en dessous ! La langue acctuel est : **${langue_fr}**\n
+:flag_fr: Bienvenue dans le système de configuration de la langue de <@${bot.user.id}>, pour changer la langue du bot vous pouvez cliquez sur le bouton qui correspond juste en dessous ! La langue acctuel est : **${langue_fr}**\n
 
-<:flag_uk:1192212869522133063> Welcome to <@${bot.user.id}>'s language configuration system, to change the language of the bot you can click on the corresponding button just below! The current language is: **${langue_en}**`)
+:flag_gb: Welcome to <@${bot.user.id}>'s language configuration system, to change the language of the bot you can click on the corresponding button just below! The current language is: **${langue_en}**`)
     .setTimestamp()
     .setFooter({text: systeme})
 

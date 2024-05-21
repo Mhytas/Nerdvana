@@ -15,14 +15,14 @@ module.exports = async (langue) => {
     .addComponents(
         new ButtonBuilder()
         .setCustomId(`bouton_say_fr`)
-        .setEmoji("<:flag_fr:1192220383525486664>")
+        .setEmoji("🇫🇷")
         .setLabel("Français")
         .setStyle(style_fr)
     )
     .addComponents(
         new ButtonBuilder()
         .setCustomId(`bouton_say_en`)
-        .setEmoji("<:flag_uk:1192212869522133063>")
+        .setEmoji("🇬🇧")
         .setLabel("English")
         .setStyle(style_en)
     )
