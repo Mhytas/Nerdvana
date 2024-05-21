@@ -1,15 +1,35 @@
 const { ActivityType, EmbedBuilder } = require("discord.js")
 const config = require("../config")
-const loadDatabase = require("../Loaders/loadDatabase")
 const loadSlashCommands = require("../Loaders/loadSlashCommands")
+require('dotenv').config();
+const mysql = require('mysql');
 
 module.exports = async bot => {
-        //Chragement de la db
-        bot.db = await loadDatabase()
-        bot.db.connect(function (err) {
-                if(err) { return console.log("Database pas connecté !", err) }
-                console.log("Base de données connectée avec succès !")
-        })
+
+        //Chargement de la db
+        function createDatabaseConnection() {
+                const db = mysql.createConnection({
+                        host: process.env.DB_HOST,
+                        port: process.env.DB_PORT,
+                        user: process.env.DB_USER,
+                        password: process.env.DB_PASSWORD,
+                        database: process.env.DB_DATABASE,
+                        charset: process.env.DB_CHARSET,
+                });
+                return db;
+              }
+              
+              const db = createDatabaseConnection();
+
+              db.connect((err) => {
+                if (err) {
+                  console.error('Erreur de connexion à la base de données:', err);
+                  process.exit(1);
+                } else {
+                  console.log('Connexion à la base de données réussie !');
+                }
+              });
+              bot.db = db
 
         //Chargement des commandes
         await loadSlashCommands(bot)
@@ -93,7 +113,7 @@ module.exports = async bot => {
                         results.forEach(async row => { await bot.db.query(`UPDATE server SET number_roles_réactions = ${row.nombre_de_lignes} WHERE guild = '${row.guild_id}'`) });
                 })
         }, 5000)
-
+        
         
         //Logs dans la console
         console.log("Le status a été mise à jour avec succès !")
