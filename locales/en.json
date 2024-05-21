@@ -1,4 +1,4 @@
 {
-    "main.1": "Hello",
-    "main.2": "your ticket has been opened!"
+	"ping_actualiser": "Refresh",
+	"ping_message": " Pong! | API ping: "
 }

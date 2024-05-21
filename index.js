@@ -3,7 +3,7 @@ const Discord = require ("discord.js")
 const Player = require("discord-player")
 const loadCommands = require("./Loaders/loadCommands")
 const loadEvents = require("./Loaders/loadEvents")
-/*const { EmbedBuilder } = require("discord.js")
+//const { EmbedBuilder } = require("discord.js")
 const i18n = require('i18n');
 
 i18n.configure({
@@ -13,16 +13,6 @@ i18n.configure({
   objectNotation: true, 
   updateFiles: true,
 });
-
-let main = i18n.__("main")
-let main2 = i18n.__("main2")
-let main3 = main + ` <@${interaction.user.id}> ` + main2
-
-i18n.setLocale('en')
-
-main = i18n.__("main")
-main2 = i18n.__("main2")
-main3 = main + ` <@${interaction.user.id}> ` + main2*/
 
 
 const bot = new Discord.Client({
