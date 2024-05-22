@@ -4,6 +4,7 @@ const i18n = require('i18n');
 module.exports = {
     name: "avatar",
     description: "Permet d'avoir l'avatar et la bannière d'un membre",
+    description: "Permet d'avoir l'avatar et la bannière d'un membre",
     permission: "Aucune",
     dm: false,
     type: 1,
