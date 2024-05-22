@@ -1,4 +1,8 @@
 {
 	"ping_actualiser": "Refresh",
-	"ping_message": " Pong! | API ping: "
+	"ping_message": " Pong! | API ping: ",
+
+	"avatar_avatar": "Avatar of ",
+	"avatar_bannière": "Banner of ",
+	"avatar_pas_bannière": " doesn't have a banner!"
 }

@@ -1,4 +1,8 @@
 {
 	"ping_actualiser": "Actualiser",
-	"ping_message": " Pong ! | Ping de l'API : "
+	"ping_message": " Pong ! | Ping de l'API : ",
+
+	"avatar_avatar": "Avatar de ",
+	"avatar_bannière": "Bannière de ",
+	"avatar_pas_bannière": " n'a pas de bannière !"
 }

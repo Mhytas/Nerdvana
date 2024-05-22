@@ -1,9 +1,9 @@
-const Discord = require('discord.js')
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, ApplicationCommandOptionType } = require(`discord.js`);
+const { EmbedBuilder, ApplicationCommandOptionType } = require(`discord.js`);
+const i18n = require('i18n');
 
 module.exports = {
     name: "avatar",
-    description: "Permet d'avoir la photo de profil et la bannière d'un membre",
+    description: "Permet d'avoir l'avatar et la bannière d'un membre",
     permission: "Aucune",
     dm: false,
     type: 1,
@@ -20,86 +20,29 @@ module.exports = {
     ],
 
     async run(bot, message, args, db) {
+      await db.query(`SELECT * FROM server WHERE guild = '${message.guild.id}'`, async (err, req_langue) => {
+        let langue = req_langue[0].langue
+        if(langue === "fr") i18n.setLocale("fr")
+        if(langue === "en") i18n.setLocale("en")
 
-        let usermention = args.getUser("membre")
-        if(!usermention) usermention = message.user
-        
-        let banner = await (await bot.users.fetch(usermention.id, { force: true })).bannerURL({ dynamic: true, size: 4096 });
+        let user = await args.getUser("membre")
+        if(!user) user = await message.user
+          
+        let banner = await (await bot.users.fetch(user.id, { force: true })).bannerURL({ dynamic: true, size: 4096 });
+        let avatar = await user.displayAvatarURL({ size: 1024, format: "png", dynamic: true })
 
-        const cmp = new ActionRowBuilder()
-        .addComponents(
-            new ButtonBuilder()
-            .setLabel(`Photo de Profil`)
-            .setCustomId(`avatar`)
-            .setDisabled(true)
-            .setStyle(ButtonStyle.Primary),
+        const embed_avatar = new EmbedBuilder()
+        .setColor(bot.color)
+        .setAuthor({ name: i18n.__("avatar_avatar") + user.username, iconURL: `${avatar}`})
+        .setImage(avatar)
 
-            new ButtonBuilder()
-            .setLabel(`Bannière`)
-            .setCustomId(`banner`)
-            .setStyle(ButtonStyle.Secondary)
-        )
-
-        const cmp2 = new ActionRowBuilder()
-        .addComponents(
-            new ButtonBuilder()
-            .setLabel(`Photo de Profil`)
-            .setCustomId(`avatar`)
-            .setStyle(ButtonStyle.Primary),
-
-            new ButtonBuilder()
-            .setLabel(`Bannière`)
-            .setCustomId(`banner`)
-            .setDisabled(true)
-            .setStyle(ButtonStyle.Secondary)
-        )
-
-        const embed = new EmbedBuilder()
-        .setColor(`ffffff`)
-        .setAuthor({ name: `${usermention.tag}`, iconURL: `${usermention.displayAvatarURL({ dynamic: true, size: 512 })}`})
-        .setTitle(`Download`)
-        .setURL(usermention.displayAvatarURL({ size: 1024, format: `png`, dynamic: true}))
-        .setImage(usermention.displayAvatarURL({ size: 1024, format: "png", dynamic: true }))
-
-        const embed2 = new EmbedBuilder()
-        .setColor(`ffffff`)
-        .setAuthor({ name: `${usermention.tag}`, iconURL: `${usermention.displayAvatarURL({ dynamic: true, size: 512 })}`})
-        .setDescription(banner ? usermention.bannerURL({dynamic: true, size: 4096})  : "L'utilisateur n'a pas de bannière !")
-        .setTitle(`Download`)
-        .setURL(banner)
+        const embed_bannière = new EmbedBuilder()
+        .setColor(bot.color)
+        .setAuthor({ name: i18n.__("avatar_bannière") + user.username, iconURL: `${avatar}`})
+        .setDescription(banner ? null : `**<@${user.id}>` + i18n.__("avatar_pas_bannière") +`**`)
         .setImage(banner)
 
-        const messages = await message.reply({content: `${usermention.displayAvatarURL({ size: 1024, format: "png", dynamic: true })}`, embeds: [], components: [cmp], ephemeral: true})
-        const collector = await messages.createMessageComponentCollector();
-
-        collector.on(`collect`, async c => {
-      
-            if (c.customId === 'avatar') {
-              
-              if (c.user.id !== message.user.id) {
-                return await c.reply({ content: `Seulement <@${message.user.id}> peut intéragir avec ce bouttons !`, ephemeral: true})
-              }
-              
-              await c.update({content: `${usermention.displayAvatarURL({ size: 1024, format: "png", dynamic: true })}`, embeds: [], components: [cmp], ephemeral: true})
-            }
-
-            if (c.customId === 'banner') {
-              
-              if (c.user.id !== message.user.id) {
-                return await c.reply({ content: `Seulement <@${message.user.id}> peut intéragir avec ce bouttons !`, ephemeral: true})
-              }
-                
-              await c.update({content: `${banner ? usermention.bannerURL({dynamic: true, size: 4096})  : "L'utilisateur n'a pas de bannière !"}`, embeds: [], components: [cmp2], ephemeral: true})
-            }
-
-            if (c.customId === 'delete') {
-              
-              if (c.user.id !== message.user.id) {
-                return await c.reply({ content: `Seulement <@${message.user.id}> peut intéragir avec ce bouttons !`, ephemeral: true})
-              }
-              
-              message.deleteReply();
-            }
-          })
+        await message.reply({embeds: [embed_avatar, embed_bannière], ephemeral: true})
+      })
     }
 }
