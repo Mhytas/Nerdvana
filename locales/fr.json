@@ -4,5 +4,8 @@
 
 	"avatar_avatar": "Avatar de ",
 	"avatar_bannière": "Bannière de ",
-	"avatar_pas_bannière": " n'a pas de bannière !"
+	"avatar_pas_bannière": " n'a pas de bannière !",
+
+	"xp_pasxp": "Ce membre n'a pas d'xp !",
+	"xp_pasmembre": "Aucun membre trouvé !"
 }

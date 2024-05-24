@@ -4,5 +4,8 @@
 
 	"avatar_avatar": "Avatar of ",
 	"avatar_bannière": "Banner of ",
-	"avatar_pas_bannière": " doesn't have a banner!"
+	"avatar_pas_bannière": " doesn't have a banner!",
+	
+	"xp_pasxp": "This member has no XP!",
+	"xp_pasmembre": "No members found!"
 }

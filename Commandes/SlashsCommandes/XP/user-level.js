@@ -1,7 +1,7 @@
-const Discord = require('discord.js')
-const canvacord = require("canvacord");
-const {createCanvas, loadImage} = require("canvas")
-const { EmbedBuilder, ApplicationCommandOptionType} = require("discord.js");
+const { RankCardBuilder, Font, BuiltInGraphemeProvider } = require('canvacord');
+const { EmbedBuilder, ApplicationCommandOptionType, AttachmentBuilder } = require("discord.js");
+const i18n = require('i18n');
+
 
 module.exports = {
     
@@ -23,69 +23,82 @@ module.exports = {
     ],
     
     async run(bot, message, args, db) {
-        
-        let membre = args.getMember("membre")
-        if(membre) membre = membre.user
-        if(!membre) membre = message.user
-        if(!membre) return message.reply({content: `Aucun membre trouvé`, ephemeral: true})
+        await db.query(`SELECT * FROM server WHERE guild = '${message.guild.id}'`, async (err, req_langue) => {
 
-        db.query(`SELECT * FROM user WHERE userID = '${membre.id}' AND guildID = ${message.guild.id}`, async (err, req) => {
-            db.query(`SELECT * FROM user WHERE guildID = '${message.guild.id}'`, async (err, all) => {
-
-                const noxp = new EmbedBuilder()
-                .setDescription('Ce membre n\'a pas d\'xp')
+            let membre = await args.getMember("membre")
+            if(membre) membre = membre.user
+            if(!membre) membre = await message.user
+            if(!membre) {
+                const no_membre = new EmbedBuilder()
+                .setDescription("**" + i18n.__("xp_pasmembre") + "**")
                 .setColor('#ff0000')
-                
-                if(req < 1) return message.reply({embeds: [noxp], ephemeral: true})
-                await message.deferReply()
 
-                const user = message.guild.members.cache.get(membre.id)
+                await message.reply({embeds: [no_membre], ephemeral: true})
+                return
+            }
 
-                async function fonction_level (status) {
-                    const xpNeeded = [100, 255, 475, 770, 1150, 1625, 2205, 2900, 3720, 4675, 
-                        5775, 7050, 8450, 10045, 11825, 13800, 15980, 18375, 20995, 23850, 
-                        26950, 30305, 33925, 37820, 42000, 46475, 51255, 56350, 61770, 67525, 
-                        73625, 80080, 86900, 94095, 101675, 109650, 118030, 126825, 136045, 
-                        145700, 155800, 166355, 177375, 188870, 200850, 213325, 226305, 239800, 
-                        253820, 268375, 281225, 296300, 311900, 328045, 344750, 362025, 379880,
-                        398325, 417370, 437025, 457300, 478205, 499750, 521945, 544800, 568325,
-                        592530, 617425, 643020, 669325, 696350, 724105, 752600, 781845, 811850,
-                        842625, 874180, 906525, 939670, 973625, 1008375, 1043850, 1080250, 1117575,
-                        1155825, 1195000, 1235100, 1276125, 1318075, 1360950, 1404750, 1449475,
-                        1495125, 1541700, 1589200, 1637625, 1686975, 1737250, 1788450, 1840575]
+            await db.query(`SELECT * FROM user WHERE userID = '${membre.id}' AND guildID = ${message.guild.id}`, async (err, req) => {
+                await db.query(`SELECT id, xp, niveau, (SELECT COUNT(*) + 1 FROM \`user\` AS u2 WHERE (u2.niveau > u1.niveau) OR (u2.niveau = u1.niveau AND u2.xp > u1.xp)) AS position FROM \`user\` AS u1 ORDER BY niveau DESC, xp DESC;`, async (err2, all) => {
+                    let langue = req_langue[0].langue
+                    if(langue === "fr") i18n.setLocale("fr")
+                    if(langue === "en") i18n.setLocale("en")
 
+                    
+                    const noxp = new EmbedBuilder()
+                    .setDescription("**" + i18n.__("xp_pasxp") + "**")
+                    .setColor('#ff0000')
+                    if(req[0].niveau === "0" && req[0].xp === "0") return await message.reply({embeds: [noxp], ephemeral: true})
+                    
+                    await message.deferReply()
+
+                    const user = await message.guild.members.cache.get(membre.id)
+                    Font.loadDefault()
+
+                    async function fonction_level (status) {
+                        const xpNeeded = [100, 255, 475, 770, 1150, 1625, 2205, 2900, 3720, 4675, 
+                            5775, 7050, 8450, 10045, 11825, 13800, 15980, 18375, 20995, 23850, 
+                            26950, 30305, 33925, 37820, 42000, 46475, 51255, 56350, 61770, 67525, 
+                            73625, 80080, 86900, 94095, 101675, 109650, 118030, 126825, 136045, 
+                            145700, 155800, 166355, 177375, 188870, 200850, 213325, 226305, 239800, 
+                            253820, 268375, 281225, 296300, 311900, 328045, 344750, 362025, 379880,
+                            398325, 417370, 437025, 457300, 478205, 499750, 521945, 544800, 568325,
+                            592530, 617425, 643020, 669325, 696350, 724105, 752600, 781845, 811850,
+                            842625, 874180, 906525, 939670, 973625, 1008375, 1043850, 1080250, 1117575,
+                            1155825, 1195000, 1235100, 1276125, 1318075, 1360950, 1404750, 1449475,
+                            1495125, 1541700, 1589200, 1637625, 1686975, 1737250, 1788450, 1840575]
+
+                            
+                        const niveaunow = parseInt(req[0].niveau)
+                        const nextLevelXP = xpNeeded[niveaunow]
+                        const xpnow = parseInt(req[0].xp)
+                        let place = all.findIndex(r => r.id === message.guild.id + "_" + membre.id) + 1
                         
-                    const niveaunow = parseInt(req[0].niveau)
-                    const nextLevelXP = xpNeeded[niveaunow]
-                    const xpnow = parseInt(req[0].xp)
-                    let place = all.findIndex(r => r.userID === membre.id) + 1
-                    
-                    const rank = new canvacord.Rank()
-                    .setStatus(status)
-                    .setAvatar(membre.displayAvatarURL({dynamic: true}))
-                    .setCurrentXP(xpnow)
-                    .setRequiredXP(nextLevelXP)
-                    .setStatus(status)
-                    .setProgressBar("#62D3F5", "COLOR")
-                    .setUsername(membre.username)
-                    .setDiscriminator("    ")
-                    .setRank(place)
-                    .setLevel(niveaunow)
-                    //.setBackground("https://cdn.discordapp.com/attachments/935825524687781978/1118169260976525372/card.png")
-                    
-                    rank.build().then(async data => {
-                        await message.followUp({files: [new Discord.AttachmentBuilder(data, {name: "rank.png"})]})
-                    });
-                }
+                        const rank = new RankCardBuilder()
+                        .setAvatar(membre.displayAvatarURL({format: 'png', size: 512}))
+                        .setBackground(bot.color)
+                        .setCurrentXP(xpnow)
+                        .setDisplayName(user.displayName)
+                        .setGraphemeProvider(BuiltInGraphemeProvider.Twemoji)
+                        .setLevel(niveaunow)
+                        .setProgressCalculator(() => {
+                            return (xpnow / nextLevelXP) * 100
+                        })
+                        .setRank(place)
+                        .setRequiredXP(nextLevelXP)
+                        .setStatus(status)
+                        .setUsername(membre.username)
 
-                try {
-                    const status = user.presence.status 
-                    status === "online" ? "#3ba55c" : status === "dnd" ? "#ed4245" : status === "stream" ? "#593695" : status === "idle" ? "#faa61a" : status === "offline" ? "#747f8d" : ""
-                    await fonction_level(status)
-                } catch {
-                    const status = "offline"
-                    await fonction_level(status)
-                }
+                        rank.build().then(async data => {
+                            await message.followUp({files: [new AttachmentBuilder(data, {name: "rank.png"})]})
+                        }).catch(err => console.error(err));
+                    }
+
+                    try {
+                        const status = user.presence.status
+                        status === "online" ? "#3ba55c" : status === "dnd" ? "#ed4245" : status === "stream" ? "#593695" : status === "idle" ? "#faa61a" : status === "offline" ? "#747f8d" : ""
+                        await fonction_level(status)
+                    } catch { await fonction_level("offline") }
+                })
             })
         })
 
