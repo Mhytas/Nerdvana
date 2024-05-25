@@ -24,6 +24,9 @@ module.exports = {
     
     async run(bot, message, args, db) {
         await db.query(`SELECT * FROM server WHERE guild = '${message.guild.id}'`, async (err, req_langue) => {
+            let langue = req_langue[0].langue
+            if(langue === "fr") i18n.setLocale("fr")
+            if(langue === "en") i18n.setLocale("en")
 
             let membre = await args.getMember("membre")
             if(membre) membre = membre.user
@@ -39,10 +42,6 @@ module.exports = {
 
             await db.query(`SELECT * FROM user WHERE userID = '${membre.id}' AND guildID = ${message.guild.id}`, async (err, req) => {
                 await db.query(`SELECT id, xp, niveau, (SELECT COUNT(*) + 1 FROM \`user\` AS u2 WHERE (u2.niveau > u1.niveau) OR (u2.niveau = u1.niveau AND u2.xp > u1.xp)) AS position FROM \`user\` AS u1 ORDER BY niveau DESC, xp DESC;`, async (err2, all) => {
-                    let langue = req_langue[0].langue
-                    if(langue === "fr") i18n.setLocale("fr")
-                    if(langue === "en") i18n.setLocale("en")
-
                     
                     const noxp = new EmbedBuilder()
                     .setDescription("**" + i18n.__("xp_pasxp") + "**")
