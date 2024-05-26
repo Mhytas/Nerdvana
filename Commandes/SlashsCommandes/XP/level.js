@@ -5,9 +5,9 @@ const i18n = require('i18n');
 
 module.exports = {
     
-    name: "user-level",
-    description: "Donne l'xp d'un membre",
-    utilisation: "/user-level [membre]",
+    name: "level",
+    description: "Affiche l'xp d'un membre",
+    utilisation: "/level [membre]",
     type: 1,
     permission: "Aucune",
     dm: false,
