@@ -82,6 +82,11 @@ module.exports = {
                         .setProgressCalculator(() => {
                             return (xpnow / nextLevelXP) * 100
                         })
+                        .setTextStyles({
+                            level:i18n.__("profil_niveau"),
+                            xp: i18n.__("profil_xp"),
+                            rank: i18n.__("profil_rang")
+                        })
                         .setRank(place)
                         .setRequiredXP(nextLevelXP)
                         .setStatus(status)
