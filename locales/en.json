@@ -7,5 +7,32 @@
 	"avatar_pas_bannière": " doesn't have a banner!",
 	
 	"xp_pasxp": "This member has no XP!",
-	"xp_pasmembre": "No members found!"
+	"xp_pasmembre": "No members found!",
+	
+	"profil_horsligne": "Offline",
+	"profil_inconnu": "Unknown",
+	"profil_badge": "Badge:",
+	"profil_badges": "Badges:",
+	"profil_rôle": " role:",
+	"profil_rôles": " roles:",
+	"profil_info1": "Information about",
+	"profil_pseudo": "Username:",
+	"profil_id": "ID:",
+	"profil_mention": "Mention:",
+	"profil_avatar": "Avatar:",
+	"profil_bannière": "Banner:",
+	"profil_bot": "Bot:",
+	"profil_status": "Status:",
+	"profil_platforme": "Login platform:",
+	"profil_nobadge": " has no badges!",
+	"profil_création": "Account creation:",
+	"profil_info2": "Information about ",
+	"profil_info2_sur": " on ",
+	"profil_arrivé": "Arrived on the server:",
+	"profil_rôle_haut": "Highest role:",
+	"profil_surnom": "Nickname:",
+	"profil_niveau": "Level:",
+	"profil_xp": "XP:",
+	"profil_rang": "Rank:",
+	"profil_erreur": "### An error occurred!"
 }
