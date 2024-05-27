@@ -24,6 +24,7 @@ Si vous avez **besoin d'aide** ou si vous souhaitez simplement obtenir __plus d'
         await message.channel.send({embeds: [ping_bot]})
       }
     */
+
     await db.query(`SELECT * FROM ticket WHERE channel = '${message.channel.id}'`, async (err, req_ticket) => {
         await db.query(`UPDATE ticket SET time = '${Date.now()}' WHERE channel = '${message.channel.id}'`)
     })
@@ -49,17 +50,16 @@ Si vous avez **besoin d'aide** ou si vous souhaitez simplement obtenir __plus d'
             const niveaunow = parseInt(req[0].niveau)
             const nextLevelXP = xpNeeded[niveaunow]
             const xpnow = parseInt(req[0].xp)
-            //let random_xp = req_config[0].random_xp
-            let random_xp = 20
+            let random_xp = 20 //req_config[0].random_xp
             let xptoadd = xpnow + Math.floor(Math.random() * random_xp) + 1
 
-            //await db.query(`UPDATE user SET xp = '${xptoadd}' WHERE userID = ${message.author.id} AND guildID = '${message.guild.id}'`)
+            await db.query(`UPDATE user SET xp = '${xptoadd}' WHERE userID = ${message.author.id} AND guildID = '${message.guild.id}'`)
 
             if(xpnow >= nextLevelXP) {
 
-                //rajout d'un niveau dans la db + message de félicitation
-                db.query(`UPDATE user SET niveau = '${niveaunow + 1}', xp = '0' WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`)
-                message.channel.send(`:tada: Félicitations ${message.author}, tu as atteint le niveau ${niveaunow + 1}  !\n:heart: Merci beaucoup pour ton activité dans ce serveur !`)
+                //Rajout d'un niveau dans la db + message de félicitation
+                await db.query(`UPDATE user SET niveau = '${niveaunow + 1}', xp = '0' WHERE userID = '${message.author.id}' AND guildID = '${message.guild.id}'`)
+                message.channel.send(`:tada: Félicitations <@${message.author.id}>, tu as atteint le niveau ${niveaunow + 1}  !\n:heart: Merci beaucoup pour ton activité dans ce serveur !`)
 
                 /*if((niveaunow + 1) === 3) {
                     message.channel.send(`:tada: ${message.author}, pour ton passage au niveau ${niveaunow + 1} voici une récompense !`)
