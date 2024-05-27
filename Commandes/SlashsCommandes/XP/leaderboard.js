@@ -6,7 +6,7 @@ const i18n = require('i18n');
 module.exports = {
     
     name: "leaderboard",
-    description: "Affiche le classemen du serveur",
+    description: "Affiche le classement du serveur",
     utilisation: "/leaderboard",
     type: 1,
     permission: "Aucune",
