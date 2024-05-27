@@ -97,11 +97,7 @@ module.exports = {
                         }).catch(err => console.error(err));
                     }
 
-                    try {
-                        const status = user.presence.status
-                        status === "online" ? "#3ba55c" : status === "dnd" ? "#ed4245" : status === "stream" ? "#593695" : status === "idle" ? "#faa61a" : status === "offline" ? "#747f8d" : ""
-                        await fonction_level(status)
-                    } catch { await fonction_level("offline") }
+                    try { await fonction_level(await user.presence.status) } catch { await fonction_level("offline") }
                 })
             })
         })
