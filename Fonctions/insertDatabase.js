@@ -1,5 +1,3 @@
-const Discord = require("discord.js")
-
 module.exports = async (bot, guild) => {
 
     let db = bot.db;
@@ -13,7 +11,6 @@ module.exports = async (bot, guild) => {
         if (req.length === 0) {
         
         await db.query("INSERT INTO server (`guild`, `guild_name`) VALUES (?, ?)",[guild.id, guildName]);
-        console.log("Données server insérées avec succès !");
       }
     });
     } catch (err) {console.error("Erreur lors de l'insertion dans la base de données :", err);}
@@ -41,30 +38,38 @@ module.exports = async (bot, guild) => {
   // Insérer les données dans la table "user" de la base de données
   await db.query(`SELECT * FROM user WHERE guildID = ${guild.id}`, async (err, req) => {
     if(err) return console.error(err)
-  
-    const members = await guild.members.fetch();
-  
-    members.forEach(async (member) => {
-      /*let guildName = member.guild.name.replace(/'/g, "\\'").replace(/[\u{1F000}-\u{1F6FF}]/gu, '');
-      let userName = member.user.username.replace(/'/g, "\\'").replace(/[\u{1F000}-\u{1F6FF}]/gu, '');*/
-      let guildID = member.guild.id
-      let memberID = member.user.id
-      let ID = `${guildID}_${memberID}`
-      
-      // Vérifier si l'utilisateur existe déjà dans la base de données
-      try{
-        await db.query(`SELECT * FROM user WHERE ID = '${ID}'`, async (err, req) => {
-          if(err) return console.error(err)
-  
-          if (req.length === 0) {
-            // L'utilisateur n'existe pas, on l'insère dans la base de données
-            await db.query(`INSERT INTO user (guildID, userID, ID) VALUES ('${guildID}', '${memberID}', '${ID}')`)
-            console.log(`L'utilisateur ${member.user.username} vient d'être ajoutée à la table user du serveur ${member.guild.name}`);
-          }
-        })
-      } catch (error) {
-        console.error("Erreur lors de la vérification ou de l'ajout de la colonne user :", error);
+
+    //Supprime les utilisateurs de la db
+    for (const user of req) {
+      if(!await guild.members.fetch(user.userID).catch(() => null)) {
+        await db.query(`DELETE FROM user WHERE userID = '${user.userID}' AND guildID = '${guild.id}'`, err3 => {
+          if(err3) return console.error(err3)
+        });
       }
-    })
+    }
+  })
+  
+  const members = await guild.members.fetch();
+
+  members.forEach(async (member) => {
+    /*let guildName = member.guild.name.replace(/'/g, "\\'").replace(/[\u{1F000}-\u{1F6FF}]/gu, '');
+    let userName = member.user.username.replace(/'/g, "\\'").replace(/[\u{1F000}-\u{1F6FF}]/gu, '');*/
+    let guildID = member.guild.id
+    let memberID = member.user.id
+    let ID = `${guildID}_${memberID}`
+    
+    // Vérifier si l'utilisateur existe déjà dans la base de données
+    try{
+      await db.query(`SELECT * FROM user WHERE ID = '${ID}'`, async (err, req) => {
+        if(err) return console.error(err)
+
+        if (req.length === 0) {
+          // L'utilisateur n'existe pas, on l'insère dans la base de données
+          await db.query(`INSERT INTO user (guildID, userID, ID) VALUES ('${guildID}', '${memberID}', '${ID}')`)
+        }
+      })
+    } catch (error) {
+      console.error("Erreur lors de la vérification ou de l'ajout de la colonne user :", error);
+    }
   })
 }
