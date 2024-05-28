@@ -141,7 +141,7 @@ module.exports = {
                         .setStatus(status)
                         .setUsername(member.username)
                         .build().then(async data => {
-                            const message_image = await channel.send({files: [new AttachmentBuilder(data, {name: i18n.__("profil_rang") + ".png", description: "test"})]})
+                            const message_image = await channel.send({files: [new AttachmentBuilder(data, {name: i18n.__("profil_rang") + ".png"})]})
                             EmbedUserInfo.setImage(await message_image.attachments.first().url)
                             await message.followUp({embeds: [EmbedUserInfo], ephemeral: true})
                         }).catch(async err => {
