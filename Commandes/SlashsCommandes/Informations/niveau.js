@@ -5,18 +5,38 @@ const i18n = require('i18n');
 
 module.exports = {
     
-    name: "level",
+    name: "niveau",
+    name_localizations:({
+        'fr': 'niveau',
+        'en-US': 'level',
+        'en-GB': 'level',
+    }),
     description: "Affiche l'xp d'un membre",
-    utilisation: "/level [membre]",
+    description_localizations:({
+        'fr': 'Affiche l\'xp d\'un membre',
+        'en-US': 'Shows a member\'s XP',
+        'en-GB': 'Shows a member\'s XP',
+    }),
+    utilisation: "/niveau [membre]",
     type: 1,
     permission: "Aucune",
     dm: false,
-    category: "Expérience",
+    category: "Informations",
     options: [
         {
             type: ApplicationCommandOptionType.User,
             name: "membre",
+            name_localizations:({
+                'fr': 'membre',
+                'en-US': 'member',
+                'en-GB': 'member',
+            }),
             description: "L'xp du membre à voir",
+            description_localizations:({
+                'fr': 'L`\'xp du membre à voir',
+                'en-US': 'Member\'s XP to see',
+                'en-GB': 'Member\'s XP to see',
+            }),
             required: false,
             autocomplete: false
         }
