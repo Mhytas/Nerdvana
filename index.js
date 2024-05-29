@@ -1,9 +1,8 @@
 require('dotenv').config();
-const Discord = require ("discord.js")
 const Player = require("discord-player")
 const loadCommands = require("./Loaders/loadCommands")
 const loadEvents = require("./Loaders/loadEvents")
-//const { EmbedBuilder } = require("discord.js")
+const { EmbedBuilder, Client, Partials, GatewayIntentBits, Collection } = require("discord.js")
 const i18n = require('i18n');
 
 i18n.configure({
@@ -14,36 +13,35 @@ i18n.configure({
   updateFiles: true,
 });
 
-
-const bot = new Discord.Client({
+const bot = new Client({
     partials: [
-        Discord.Partials.Message,
-        Discord.Partials.Channel,
-        Discord.Partials.Reaction,
-        Discord.Partials.GuildMember,
-        Discord.Partials.GuildScheduledEvent,
-        Discord.Partials.ThreadMember,
-        Discord.Partials.User
+        Partials.Message,
+        Partials.Channel,
+        Partials.Reaction,
+        Partials.GuildMember,
+        Partials.GuildScheduledEvent,
+        Partials.ThreadMember,
+        Partials.User
     ], intents: [
-        Discord.GatewayIntentBits.AutoModerationConfiguration,
-        Discord.GatewayIntentBits.AutoModerationExecution,
-        Discord.GatewayIntentBits.DirectMessageReactions,
-        Discord.GatewayIntentBits.DirectMessageTyping,
-        Discord.GatewayIntentBits.DirectMessages,
-        Discord.GatewayIntentBits.GuildEmojisAndStickers,
-        Discord.GatewayIntentBits.GuildIntegrations,
-        Discord.GatewayIntentBits.GuildInvites,
-        Discord.GatewayIntentBits.GuildMembers,
-        Discord.GatewayIntentBits.GuildMessageReactions,
-        Discord.GatewayIntentBits.GuildMessageTyping,
-        Discord.GatewayIntentBits.GuildMessages,
-        Discord.GatewayIntentBits.GuildModeration,
-        Discord.GatewayIntentBits.GuildPresences,
-        Discord.GatewayIntentBits.GuildScheduledEvents,
-        Discord.GatewayIntentBits.GuildVoiceStates,
-        Discord.GatewayIntentBits.GuildWebhooks,
-        Discord.GatewayIntentBits.Guilds,
-        Discord.GatewayIntentBits.MessageContent,
+        GatewayIntentBits.AutoModerationConfiguration,
+        GatewayIntentBits.AutoModerationExecution,
+        GatewayIntentBits.DirectMessageReactions,
+        GatewayIntentBits.DirectMessageTyping,
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.GuildEmojisAndStickers,
+        GatewayIntentBits.GuildIntegrations,
+        GatewayIntentBits.GuildInvites,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.GuildMessageTyping,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildModeration,
+        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildScheduledEvents,
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildWebhooks,
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.MessageContent,
     ]
 });
 
@@ -58,7 +56,7 @@ bot.player = new Player.Player(bot, {
     },
 });
 
-bot.commands = new Discord.Collection()
+bot.commands = new Collection()
 bot.color = "#58baff";
 bot.function = {
   //Interaction
@@ -169,7 +167,7 @@ function sendLogEmbed(embed) {
 
 // Exemple pour l'événement 'channelCreate'
 bot.on('channelCreate', channel => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Nouveau salon')
     .setFields(
@@ -183,7 +181,7 @@ bot.on('channelCreate', channel => {
 
 // Exemple pour l'événement 'channelUpdate'
 bot.on('channelUpdate', (oldChannel, newChannel) => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Mise à jour de salon')
     .setDescription(`Le salon ${oldChannel.name} a été mis à jour.`)
@@ -198,7 +196,7 @@ bot.on('channelUpdate', (oldChannel, newChannel) => {
 
 // Exemple pour l'événement 'channelDelete'
 bot.on('channelDelete', channel => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Suppression de salon')
     .setFields(
@@ -211,7 +209,7 @@ bot.on('channelDelete', channel => {
 
 // Exemple pour l'événement 'guildBanAdd'
 bot.on('guildBanAdd', (guild, user) => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Membre banni')
     .setFields(
@@ -224,7 +222,7 @@ bot.on('guildBanAdd', (guild, user) => {
 
 // Exemple pour l'événement 'guildBanRemove'
 bot.on('guildBanRemove', (guild, user) => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Bannissement levé')
     .setFields(
@@ -237,7 +235,7 @@ bot.on('guildBanRemove', (guild, user) => {
 
 // Exemple pour l'événement 'guildRoleCreate'
 bot.on('guildRoleCreate', role => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Nouveau rôle')
     .setFields(
@@ -250,7 +248,7 @@ bot.on('guildRoleCreate', role => {
 
 // Exemple pour l'événement 'guildRoleDelete'
 bot.on('guildRoleDelete', role => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Suppression de rôle')
     .setFields(
@@ -263,7 +261,7 @@ bot.on('guildRoleDelete', role => {
 
 // Exemple pour l'événement 'guildRoleUpdate'
 bot.on('guildRoleUpdate', (oldRole, newRole) => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Mise à jour de rôle')
     .setDescription(`Le rôle ${oldRole.name} a été mis à jour.`)
@@ -277,7 +275,7 @@ bot.on('guildRoleUpdate', (oldRole, newRole) => {
 
 // Exemple pour l'événement 'guildUpdate'
 bot.on('guildUpdate', (oldGuild, newGuild) => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Mise à jour de serveur')
     .setFields(
@@ -290,7 +288,7 @@ bot.on('guildUpdate', (oldGuild, newGuild) => {
 
 // Exemple pour l'événement 'messageDelete'
 bot.on('messageDelete', message => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Message supprimé')
     .setFields(
@@ -303,7 +301,7 @@ bot.on('messageDelete', message => {
 
 // Exemple pour l'événement 'messageDeleteBulk'
 bot.on('messageDeleteBulk', messages => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Messages supprimés en masse')
     .setFields(
@@ -315,7 +313,7 @@ bot.on('messageDeleteBulk', messages => {
 
 // Exemple pour l'événement 'messageUpdate'
 bot.on('messageUpdate', (oldMessage, newMessage) => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Message modifié')
     .setDescription(`Le message de ${oldMessage.author.username} a été modifié.`)
@@ -329,7 +327,7 @@ bot.on('messageUpdate', (oldMessage, newMessage) => {
 
 // Exemple pour l'événement 'guildMemberAdd'
 bot.on('guildMemberAdd', member => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Nouveau membre rejoint')
     .setFields(
@@ -342,7 +340,7 @@ bot.on('guildMemberAdd', member => {
 
 // Exemple pour l'événement 'guildMemberKick'
 bot.on('guildMemberKick', member => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Membre expulsé')
     .setFields(
@@ -355,7 +353,7 @@ bot.on('guildMemberKick', member => {
 
 // Exemple pour l'événement 'guildMemberRemove'
 bot.on('guildMemberRemove', member => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Membre quitté')
     .setFields(
@@ -368,7 +366,7 @@ bot.on('guildMemberRemove', member => {
 
 // Exemple pour l'événement 'guildMemberNickUpdate'
 bot.on('guildMemberNickUpdate', (member, oldNick, newNick) => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Mise à jour de pseudo')
     .setDescription(`Le pseudo de ${member.user.username} a été mis à jour.`)
@@ -382,7 +380,7 @@ bot.on('guildMemberNickUpdate', (member, oldNick, newNick) => {
 
 // Exemple pour l'événement 'voiceChannelLeave'
 bot.on('voiceChannelLeave', (member, oldChannel) => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Membre quitté un salon vocal')
     .setFields(
@@ -395,7 +393,7 @@ bot.on('voiceChannelLeave', (member, oldChannel) => {
 
 // Exemple pour l'événement 'voiceChannelJoin'
 bot.on('voiceChannelJoin', (member, newChannel) => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Membre a rejoint un salon vocal')
     .setFields(
@@ -408,7 +406,7 @@ bot.on('voiceChannelJoin', (member, newChannel) => {
 
 // Exemple pour l'événement 'voiceChannelSwitch'
 bot.on('voiceChannelSwitch', (member, oldChannel, newChannel) => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Membre a changé de salon vocal')
     .setFields(
@@ -422,7 +420,7 @@ bot.on('voiceChannelSwitch', (member, oldChannel, newChannel) => {
 
 // Exemple pour l'événement 'guildEmojisUpdate'
 bot.on('guildEmojisUpdate', (guild, oldEmojis, newEmojis) => {
-  const embed = new Discord.EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor('#FFA500')
     .setTitle('Mise à jour des emojis')
     .setFields(
