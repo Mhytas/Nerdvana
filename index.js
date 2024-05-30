@@ -2,7 +2,7 @@ require('dotenv').config();
 const Player = require("discord-player")
 const loadCommands = require("./Loaders/loadCommands")
 const loadEvents = require("./Loaders/loadEvents")
-const { EmbedBuilder, Client, Partials, GatewayIntentBits, Collection } = require("discord.js")
+const { Client, Partials, GatewayIntentBits, Collection } = require("discord.js")
 const i18n = require('i18n');
 
 i18n.configure({
@@ -14,46 +14,49 @@ i18n.configure({
 });
 
 const bot = new Client({
-    partials: [
-        Partials.Message,
-        Partials.Channel,
-        Partials.Reaction,
-        Partials.GuildMember,
-        Partials.GuildScheduledEvent,
-        Partials.ThreadMember,
-        Partials.User
-    ], intents: [
-        GatewayIntentBits.AutoModerationConfiguration,
-        GatewayIntentBits.AutoModerationExecution,
-        GatewayIntentBits.DirectMessageReactions,
-        GatewayIntentBits.DirectMessageTyping,
-        GatewayIntentBits.DirectMessages,
-        GatewayIntentBits.GuildEmojisAndStickers,
-        GatewayIntentBits.GuildIntegrations,
-        GatewayIntentBits.GuildInvites,
-        GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildMessageReactions,
-        GatewayIntentBits.GuildMessageTyping,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.GuildModeration,
-        GatewayIntentBits.GuildPresences,
-        GatewayIntentBits.GuildScheduledEvents,
-        GatewayIntentBits.GuildVoiceStates,
-        GatewayIntentBits.GuildWebhooks,
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.MessageContent,
-    ]
+  partials: [
+    Partials.Channel,
+    Partials.GuildMember,
+    Partials.GuildScheduledEvent,
+    Partials.Message,
+    Partials.Reaction,
+    Partials.ThreadMember,
+    Partials.User,
+  ],
+  intents: [
+    GatewayIntentBits.AutoModerationConfiguration,
+    GatewayIntentBits.AutoModerationExecution,
+    GatewayIntentBits.DirectMessagePolls,
+    GatewayIntentBits.DirectMessageReactions,
+    GatewayIntentBits.DirectMessageTyping,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.GuildEmojisAndStickers,
+    GatewayIntentBits.GuildIntegrations,
+    GatewayIntentBits.GuildInvites,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessagePolls,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildMessageTyping,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildModeration,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildScheduledEvents,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildWebhooks,
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.MessageContent,
+  ]
 });
 
 bot.player = new Player.Player(bot, {
-    leaveOnEnd: true,
-    leaveOnEmpty: true,
-    initialVolume: 100,
-    ytdlOptions: {
-        filter: "audioonly",
-        quality: "highestaudio",
-        highWaterMark: 1 << 25,
-    },
+  leaveOnEnd: true,
+  leaveOnEmpty: true,
+  initialVolume: 100,
+  ytdlOptions: {
+    filter: "audioonly",
+    quality: "highestaudio",
+    highWaterMark: 1 << 25,
+  },
 });
 
 bot.commands = new Collection()
@@ -144,6 +147,7 @@ bot.function = {
   searchSpam: require("./Fonctions/searchSpam"),
   insertDatabase: require("./Fonctions/insertDatabase"),
 }
+
 bot.login(process.env.TOKEN)
 loadCommands(bot, process.cwd() + '/Commandes');
 loadEvents(bot)
