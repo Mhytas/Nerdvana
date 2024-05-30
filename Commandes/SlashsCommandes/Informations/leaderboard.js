@@ -5,19 +5,19 @@ const i18n = require('i18n');
 
 module.exports = {
     
-    name: "classement",
+    name: "leaderboard",
     name_localizations:({
         'fr': 'classement',
         'en-US': 'leaderboard',
         'en-GB': 'leaderboard',
     }),
-    description: "Affiche le classement du serveur",
+    description: "Shows server ranking",
     description_localizations:({
         'fr': 'Affiche le classement du serveur',
         'en-US': 'Shows server ranking',
         'en-GB': 'Shows server ranking',
     }),
-    utilisation: "/classement",
+    utilisation: "/leaderboard",
     type: 1,
     permission: "Aucune",
     dm: false,
@@ -31,7 +31,7 @@ module.exports = {
                 'en-US': 'xp',
                 'en-GB': 'xp',
             }),
-            description: "Affiche le classement de l'xp du serveur",
+            description: "Shows the server\'s XP ranking",
             description_localizations:({
                 'fr': 'Affiche le classement de l\'xp du serveur',
                 'en-US': 'Shows the server\'s XP ranking',
@@ -40,17 +40,32 @@ module.exports = {
         },
         {
             type: ApplicationCommandOptionType.Subcommand,
-            name: "argent",
+            name: "money",
             name_localizations:({
                 'fr': 'argent',
                 'en-US': 'money',
                 'en-GB': 'money',
             }),
-            description: "Affiche le classement de l'argent du serveur",
+            description: "Shows server money ranking",
             description_localizations:({
                 'fr': 'Affiche le classement de l\'argent du serveur',
                 'en-US': 'Shows server money ranking',
                 'en-GB': 'Shows server money ranking',
+            }),
+        },
+        {
+            type: ApplicationCommandOptionType.Subcommand,
+            name: "invitations",
+            name_localizations:({
+                'fr': 'invitations',
+                'en-US': 'invitations',
+                'en-GB': 'invitations',
+            }),
+            description: "Shows the server's invitation ranking",
+            description_localizations:({
+                'fr': 'Affiche le classement des invitations du serveur',
+                'en-US': 'Shows the server\'s invitation ranking',
+                'en-GB': 'Shows the server\'s invitation ranking',
             }),
         },
     ],
@@ -95,7 +110,7 @@ module.exports = {
                         }
 
                         const noxp = new EmbedBuilder()
-                        .setDescription("**" + "Aucun membre du serveru a de l'XP !" + "**")
+                        .setDescription("**" + i18n.__("leaderboard_noxp") + "**")
                         .setColor("DarkRed")
                         if(players.length === 0) return await message.reply({embeds: [noxp], ephemeral: true})
                         
@@ -107,15 +122,16 @@ module.exports = {
                                 .setGraphemeProvider(BuiltInGraphemeProvider.Twemoji)
                                 .setBackgroundColor()
                                 .setHeader({
-                                    title: `Classement du serveur`,
+                                    title: i18n.__("leaderboard_titre"),
                                     subtitle: guild.name,
                                     image: guild.iconURL()
                                 })
                                 .setVariant(LeaderboardVariants.Default)
                                 .setPlayers(players)
                                 .setTextStyles({
-                                    level: i18n.__("profil_niveau"),
-                                    xp: "XP",
+                                    level: i18n.__("leaderboard_niveau"),
+                                    xp: i18n.__("leaderboard_xp"),
+                                    rank: i18n.__("leaderboard_rang"),
                                 })
                                 .build().then(async data => {
                                     await message.followUp({files: [new AttachmentBuilder(data, {name: "leaderboard.png"})]})
@@ -125,11 +141,17 @@ module.exports = {
                     })
                 })
                 break;
-                /*case 'argent':
+                case 'money':
                     message.reply({content: "ping 2", ephemeral: true})
-                break;*/
+                break;
+                case 'invitations':
+                    message.reply({content: "ping 2", ephemeral: true})
+                break;
                 default:
-                    await message.reply({content: "Une erreur est survenu, merci de contacter un membre du staff pour faire remonter l'erreur", ephemeral: true})
+                    const embed_erreur_subcommands = new EmbedBuilder()
+                    .setColor("DarkRed")
+                    .setDescription("**" + i18n.__("erreur_subcommands") + "**")
+                    await message.reply({embeds: [embed_erreur_subcommands], ephemeral: true})
                 break;
             }
         })

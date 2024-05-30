@@ -1,4 +1,6 @@
 {
+	"erreur_subcommands": "Une erreur est survenu, merci de contacter un membre du staff pour faire remonter l'erreur !",
+
 	"ping_actualiser": "Actualiser",
 	"ping_message": " Pong ! | Ping de l'API : ",
 
@@ -34,5 +36,11 @@
 	"profil_niveau": "Niveau :",
 	"profil_xp": "XP :",
 	"profil_rang": "Rang :",
-	"profil_erreur": "### Une erreur est survenu !"
+	"profil_erreur": "### Une erreur est survenu !",
+
+	"leaderboard_noxp": "Personne sur le serveur possède d'XP !",
+	"leaderboard_titre": "Classement du serveur",
+	"leaderboard_niveau": "Niveau :",
+	"leaderboard_xp": "XP",
+	"leaderboard_rang": "Rang"
 }

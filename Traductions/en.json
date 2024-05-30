@@ -1,4 +1,6 @@
 {
+	"erreur_subcommands": "An error has occurred, please contact a member of staff to report the error!",
+
 	"ping_actualiser": "Refresh",
 	"ping_message": " Pong! | API ping: ",
 
@@ -34,5 +36,11 @@
 	"profil_niveau": "Level:",
 	"profil_xp": "XP:",
 	"profil_rang": "Rank:",
-	"profil_erreur": "### An error occurred!"
+	"profil_erreur": "### An error occurred!",
+
+	"leaderboard_noxp": "No one on the server has any XP!",
+	"leaderboard_titre": "Server rank",
+	"leaderboard_niveau": "Level:",
+	"leaderboard_xp": "XP",
+	"leaderboard_rang": "Rank"
 }

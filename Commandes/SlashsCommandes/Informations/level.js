@@ -5,7 +5,7 @@ const i18n = require('i18n');
 
 module.exports = {
     
-    name: "niveau",
+    name: "level",
     name_localizations:({
         'fr': 'niveau',
         'en-US': 'level',

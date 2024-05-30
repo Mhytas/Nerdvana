@@ -8,7 +8,7 @@ const i18n = require('i18n');
 i18n.configure({
   locales: ['fr', 'en'], 
   directory: __dirname + '/Traductions', 
-  defaultLocale: 'fr', 
+  defaultLocale: 'en', 
   objectNotation: true, 
   updateFiles: true,
 });
