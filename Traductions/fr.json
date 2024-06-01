@@ -1,5 +1,6 @@
 {
 	"erreur_subcommands": "Une erreur est survenu, merci de contacter un membre du staff pour faire remonter l'erreur !",
+	"erreur_no_invitations": "Le serveur n'as aucune invitations !",
 
 	"ping_actualiser": "Actualiser",
 	"ping_message": " Pong ! | Ping de l'API : ",

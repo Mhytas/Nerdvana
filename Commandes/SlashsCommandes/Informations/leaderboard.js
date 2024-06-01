@@ -145,7 +145,38 @@ module.exports = {
                     message.reply({content: "ping 2", ephemeral: true})
                 break;
                 case 'invitations':
-                    message.reply({content: "ping 2", ephemeral: true})
+                    await db.query(`SELECT * FROM user WHERE guildID = '${message.guild.id}' ORDER BY invites DESC`, async (err, req) => {
+                        if(err) return console.log(err)
+                        
+                        const leaderboard = new EmbedBuilder()
+                        .setColor(bot.color)
+                        .setTitle("🏆 Classement des invitations 🏆")
+                        .setDescription("Voici le top 10 des membres qui ont invité le plus de personnes 👥")
+                        .setThumbnail(await message.guild.iconURL({ dynamic: true }))
+                        .setTimestamp()
+                        .setFooter({ text: "Invitez vos amis pour grimper dans le classement ! 🚀", iconURL: bot.user.avatarURL() });
+
+                        for(let i = 0; i < req.length && i < 10; i++) {
+                            if(req[i].invites === "0") continue
+                            const user = await bot.users.fetch(req[i].userID);
+                            let medal = "";
+                            if (i === 0) medal = ":first_place:";
+                            else if (i === 1) medal = ":second_place:";
+                            else if (i === 2) medal = ":third_place:";
+                            leaderboard.addFields({
+                                name: `${medal} ${i+1}. ${user.username}`,
+                                value: `**Nombre d'invitations :** \`${req[i].invites}\` 👥`,
+                                inline: true,
+                            });
+                        }
+
+                        const embed_erreur_no_invitations = new EmbedBuilder()
+                        .setColor("DarkRed")
+                        .setDescription("**" + i18n.__("erreur_no_invitations") + "**")
+                        if(leaderboard.data.fields === undefined) return message.reply({embeds: [embed_erreur_no_invitations], ephemeral: true})
+                        
+                        await message.reply({ embeds: [leaderboard] });
+                    });
                 break;
                 default:
                     const embed_erreur_subcommands = new EmbedBuilder()
