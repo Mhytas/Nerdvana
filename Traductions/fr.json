@@ -40,8 +40,15 @@
 	"profil_erreur": "### Une erreur est survenu !",
 
 	"leaderboard_noxp": "Personne sur le serveur possède d'XP !",
-	"leaderboard_titre": "Classement du serveur",
+	"leaderboard_noinvite": "Personne sur le serveur a fait d'invitations !",
+	"leaderboard_noargent": "Personne sur le serveur possède d'argent !",
+	"leaderboard_titre_invite": "Classement des invitations du serveur",
+	"leaderboard_titre_xp": "Classement de l'XP du serveur",
+	"leaderboard_titre_argent": "Classement de l'argent du serveur",
 	"leaderboard_niveau": "Niveau :",
 	"leaderboard_xp": "XP",
+	"leaderboard_invite": "Invites",
+	"leaderboard_argent": " 💰 actuellement",
+	"leaderboard_argent_record": "Record :",
 	"leaderboard_rang": "Rang"
 }

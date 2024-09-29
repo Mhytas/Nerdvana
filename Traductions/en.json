@@ -40,8 +40,15 @@
 	"profil_erreur": "### An error occurred!",
 
 	"leaderboard_noxp": "No one on the server has any XP!",
-	"leaderboard_titre": "Server rank",
+	"leaderboard_noinvite": "No one on the server has made any invitations!",
+	"leaderboard_noargent": "No one on the server has any money!",
+	"leaderboard_titre_invite": "Server invitation ranking",
+	"leaderboard_titre_xp": "Server XP ranking",
+	"leaderboard_titre_argent": "Server money ranking",
 	"leaderboard_niveau": "Level:",
 	"leaderboard_xp": "XP",
+	"leaderboard_invite": "Guests",
+	"leaderboard_argent": "💰 currently",
+	"leaderboard_argent_record": "Record :",
 	"leaderboard_rang": "Rank"
 }

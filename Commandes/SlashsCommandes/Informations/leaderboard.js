@@ -37,8 +37,21 @@ module.exports = {
                 'en-US': 'Shows the server\'s XP ranking',
                 'en-GB': 'Shows the server\'s XP ranking',
             }),
-        },
-        {
+        },{
+            type: ApplicationCommandOptionType.Subcommand,
+            name: "invitations",
+            name_localizations:({
+                'fr': 'invitations',
+                'en-US': 'invitations',
+                'en-GB': 'invitations',
+            }),
+            description: "Shows the server's invitation ranking",
+            description_localizations:({
+                'fr': 'Affiche le classement des invitations du serveur',
+                'en-US': 'Shows the server\'s invitation ranking',
+                'en-GB': 'Shows the server\'s invitation ranking',
+            }),
+        },{
             type: ApplicationCommandOptionType.Subcommand,
             name: "money",
             name_localizations:({
@@ -53,21 +66,6 @@ module.exports = {
                 'en-GB': 'Shows server money ranking',
             }),
         },
-        {
-            type: ApplicationCommandOptionType.Subcommand,
-            name: "invitations",
-            name_localizations:({
-                'fr': 'invitations',
-                'en-US': 'invitations',
-                'en-GB': 'invitations',
-            }),
-            description: "Shows the server's invitation ranking",
-            description_localizations:({
-                'fr': 'Affiche le classement des invitations du serveur',
-                'en-US': 'Shows the server\'s invitation ranking',
-                'en-GB': 'Shows the server\'s invitation ranking',
-            }),
-        },
     ],
     
     async run(bot, message, args, db) {
@@ -79,38 +77,89 @@ module.exports = {
             const subCommand = await args.getSubcommand();
             switch (subCommand) {
                 case 'xp':
+                await db.query(`SELECT userID, xp, niveau FROM user AS u1 WHERE u1.xp > 0 OR u1.niveau > 0 ORDER BY niveau DESC, xp DESC LIMIT 10`, async (err, req) => {
+                    if (err) return console.error(err)
+                    
+                    const guild = await bot.guilds.fetch(message.guild.id);
+                    let players = []
+                    let position = 1
+                    for(const player of req) {
+                        try {
+                            let player_user = await guild.members.fetch(player.userID)
+                            if(player_user.user.bot) continue
+                            players.push({
+                                displayName: player_user.displayName,
+                                username: player_user.user.username,
+                                level: player.niveau,
+                                xp: player.xp,
+                                rank: position,
+                                avatar: player_user.displayAvatarURL({format: 'png', size: 512}),
+                            })
+                            position = position + 1
+                        } catch (fetchErr) {
+                            console.error(`Impossible de récupérer l'utilisateur ${player.userID} : ${fetchErr.message}`);
+                        }
+                    }
 
-                await db.query(`SELECT * FROM user WHERE guildID = ${message.guild.id}`, async (err, req) => {
-                    await db.query(`SELECT id, xp, niveau, (SELECT COUNT(*) + 1 FROM \`user\` AS u2 WHERE (u2.niveau > u1.niveau) OR (u2.niveau = u1.niveau AND u2.xp > u1.xp)) AS position FROM \`user\` AS u1 ORDER BY niveau DESC, xp DESC;`, async (err2, all) => {
+                    const noxp = new EmbedBuilder()
+                    .setDescription("**" + i18n.__("leaderboard_noxp") + "**")
+                    .setColor("DarkRed")
+                    if(players.length === 0) return await message.reply({embeds: [noxp], ephemeral: true})
+                    
+                    await message.deferReply()
+                    Font.loadDefault()
+                    
+                    try {
+                        new LeaderboardBuilder()
+                            .setGraphemeProvider(BuiltInGraphemeProvider.Twemoji)
+                            .setBackgroundColor()
+                            .setHeader({
+                                title: i18n.__("leaderboard_titre_xp"),
+                                subtitle: guild.name,
+                                image: guild.iconURL()
+                            })
+                            .setVariant(LeaderboardVariants.Default)
+                            .setPlayers(players)
+                            .setTextStyles({
+                                level: i18n.__("leaderboard_niveau"),
+                                xp: i18n.__("leaderboard_xp"),
+                                rank: i18n.__("leaderboard_rang"),
+                            })
+                            .build().then(async data => {
+                                await message.followUp({files: [new AttachmentBuilder(data, {name: "leaderboard.png"})]})
+                            }).catch(err => console.error(err));
+
+                    } catch (buildErr) { return console.error(buildErr) }
+                })
+                break;
+                
+                case 'invitations':
+                    await db.query(`SELECT userID, invites FROM user AS u1 WHERE u1.invites > 0 ORDER BY invites DESC LIMIT 10`, async (err, req) => {
                         if (err) return console.error(err)
-                        if (err2) return console.error(err2)
-                        
+                                            
                         const guild = await bot.guilds.fetch(message.guild.id);
-
-                        const sortedResults = req.sort((a, b) => {
-                            if (b.niveau === a.niveau) { return b.xp - a.xp }
-                            return b.niveau - a.niveau;
-                        });
-                        
                         let players = []
-                        for(const player of sortedResults.slice(0, 10)) {
+                        let position = 1
+                        for(const player of req) {
                             try {
                                 let player_user = await guild.members.fetch(player.userID)
-                                if(player.xp === 0 && player.niveau === 0) continue
                                 if(player_user.user.bot) continue
                                 players.push({
                                     displayName: player_user.displayName,
                                     username: player_user.user.username,
-                                    level: player.niveau,
-                                    xp: player.xp,
-                                    rank: all.findIndex(r => r.id === message.guild.id + "_" + player.userID) + 1,
+                                    level: "",
+                                    xp: player.invites,
+                                    rank: position,
                                     avatar: player_user.displayAvatarURL({format: 'png', size: 512}),
                                 })
-                            } catch {}
+                                position = position + 1
+                            } catch (fetchErr) {
+                                console.error(`Impossible de récupérer l'utilisateur ${player.userID} : ${fetchErr.message}`);
+                            }
                         }
-
+    
                         const noxp = new EmbedBuilder()
-                        .setDescription("**" + i18n.__("leaderboard_noxp") + "**")
+                        .setDescription("**" + i18n.__("leaderboard_noinvite") + "**")
                         .setColor("DarkRed")
                         if(players.length === 0) return await message.reply({embeds: [noxp], ephemeral: true})
                         
@@ -122,62 +171,82 @@ module.exports = {
                                 .setGraphemeProvider(BuiltInGraphemeProvider.Twemoji)
                                 .setBackgroundColor()
                                 .setHeader({
-                                    title: i18n.__("leaderboard_titre"),
+                                    title: i18n.__("leaderboard_titre_invite"),
                                     subtitle: guild.name,
                                     image: guild.iconURL()
                                 })
                                 .setVariant(LeaderboardVariants.Default)
                                 .setPlayers(players)
                                 .setTextStyles({
-                                    level: i18n.__("leaderboard_niveau"),
-                                    xp: i18n.__("leaderboard_xp"),
+                                    level: "",
+                                    xp: i18n.__("leaderboard_invite"),
                                     rank: i18n.__("leaderboard_rang"),
                                 })
                                 .build().then(async data => {
                                     await message.followUp({files: [new AttachmentBuilder(data, {name: "leaderboard.png"})]})
                                 }).catch(err => console.error(err));
-
+    
                         } catch (buildErr) { return console.error(buildErr) }
                     })
-                })
                 break;
+                
                 case 'money':
-                    message.reply({content: "ping 2", ephemeral: true})
-                break;
-                case 'invitations':
-                    await db.query(`SELECT * FROM user WHERE guildID = '${message.guild.id}' ORDER BY invites DESC`, async (err, req) => {
-                        if(err) return console.log(err)
-                        
-                        const leaderboard = new EmbedBuilder()
-                        .setColor(bot.color)
-                        .setTitle("🏆 Classement des invitations 🏆")
-                        .setDescription("Voici le top 10 des membres qui ont invité le plus de personnes 👥")
-                        .setThumbnail(await message.guild.iconURL({ dynamic: true }))
-                        .setTimestamp()
-                        .setFooter({ text: "Invitez vos amis pour grimper dans le classement ! 🚀", iconURL: bot.user.avatarURL() });
-
-                        for(let i = 0; i < req.length && i < 10; i++) {
-                            if(req[i].invites === "0") continue
-                            const user = await bot.users.fetch(req[i].userID);
-                            let medal = "";
-                            if (i === 0) medal = ":first_place:";
-                            else if (i === 1) medal = ":second_place:";
-                            else if (i === 2) medal = ":third_place:";
-                            leaderboard.addFields({
-                                name: `${medal} ${i+1}. ${user.username}`,
-                                value: `**Nombre d'invitations :** \`${req[i].invites}\` 👥`,
-                                inline: true,
-                            });
+                    await db.query(`SELECT userID, argent, max_argent FROM user AS u1 WHERE u1.argent > 0 ORDER BY argent DESC LIMIT 10`, async (err, req) => {
+                        if (err) return console.error(err)
+                                            
+                        const guild = await bot.guilds.fetch(message.guild.id);
+                        let players = []
+                        let position = 1
+                        for(const player of req) {
+                            try {
+                                let player_user = await guild.members.fetch(player.userID)
+                                if(player_user.user.bot) continue
+                                players.push({
+                                    displayName: player_user.displayName,
+                                    username: player_user.user.username,
+                                    level: player.max_argent + " 💰",
+                                    xp: player.argent,
+                                    rank: position,
+                                    avatar: player_user.displayAvatarURL({format: 'png', size: 512}),
+                                })
+                                position = position + 1
+                            } catch (fetchErr) {
+                                console.error(`Impossible de récupérer l'utilisateur ${player.userID} : ${fetchErr.message}`);
+                            }
                         }
-
-                        const embed_erreur_no_invitations = new EmbedBuilder()
+    
+                        const noxp = new EmbedBuilder()
+                        .setDescription("**" + i18n.__("leaderboard_noargent") + "**")
                         .setColor("DarkRed")
-                        .setDescription("**" + i18n.__("erreur_no_invitations") + "**")
-                        if(leaderboard.data.fields === undefined) return message.reply({embeds: [embed_erreur_no_invitations], ephemeral: true})
+                        if(players.length === 0) return await message.reply({embeds: [noxp], ephemeral: true})
                         
-                        await message.reply({ embeds: [leaderboard] });
-                    });
+                        await message.deferReply()
+                        Font.loadDefault()
+                        
+                        try {
+                            new LeaderboardBuilder()
+                                .setGraphemeProvider(BuiltInGraphemeProvider.Twemoji)
+                                .setBackgroundColor()
+                                .setHeader({
+                                    title: i18n.__("leaderboard_titre_argent"),
+                                    subtitle: guild.name,
+                                    image: guild.iconURL()
+                                })
+                                .setVariant(LeaderboardVariants.Default)
+                                .setPlayers(players)
+                                .setTextStyles({
+                                    level: i18n.__("leaderboard_argent_record"),
+                                    xp: i18n.__("leaderboard_argent"),
+                                    rank: i18n.__("leaderboard_rang"),
+                                })
+                                .build().then(async data => {
+                                    await message.followUp({files: [new AttachmentBuilder(data, {name: "leaderboard.png"})]})
+                                }).catch(err => console.error(err));
+    
+                        } catch (buildErr) { return console.error(buildErr) }
+                    })
                 break;
+
                 default:
                     const embed_erreur_subcommands = new EmbedBuilder()
                     .setColor("DarkRed")
