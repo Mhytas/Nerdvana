@@ -1,8 +1,6 @@
-const Discord = require("discord.js")
+const { PermissionsBitField, ButtonBuilder, ButtonStyle, ActionRowBuilder, EmbedBuilder } = require("discord.js")
 
 module.exports = async (bot, interaction) => {
-
-    let db = bot.db;
 
     //bouton menu /aide
     if(interaction.isButton()) {
@@ -11,7 +9,7 @@ module.exports = async (bot, interaction) => {
             bot.commands.forEach(command => {
                 if(!categories.includes(command.category)) categories.push(command.category)                
             })
-            let Embed = new Discord.EmbedBuilder()
+            let Embed = new EmbedBuilder()
             .setColor(bot.color)
             .setTitle(`Commandes du bot`)
             .setThumbnail(bot.user.displayAvatarURL({dynamic: true}))
@@ -34,15 +32,17 @@ module.exports = async (bot, interaction) => {
                 Embed.addFields({ name: `Application utilisateur`, value: `${fieldValues_user.join("\n")}` });
             }
 
-            /*//ajouter les application message dans l'embed
+            //ajouter les application message dans l'embed
+            /*
             let commands_message = bot.commands.filter(cmd => cmd.type === 3);
             const fieldValues_message = commands_message.map(cmd => `\`${cmd.utilisation}\``);
             if (fieldValues_message.length > 0) {
                 Embed.addFields({ name: `Application utilisateur`, value: `${fieldValues_message.join("\n")}` });
-            }*/
+            }
+            */
 
             await interaction.deferUpdate()
-            await interaction.editReply({ embeds: [Embed], components: [interaction.message.components[0], interaction.message.components[1]]});
+            await interaction.editReply({ embeds: [Embed], components: [interaction.message.components[0], interaction.message.components[1]/*, interaction.message.components[2]*/]});
         }
     }
 
@@ -52,7 +52,7 @@ module.exports = async (bot, interaction) => {
         const selectedCommand = interaction.values[0];
         command = bot.commands.get(selectedCommand);
 
-            let Embed = new Discord.EmbedBuilder()
+            let Embed = new EmbedBuilder()
             .setColor(bot.color)
             .setTitle(`Commande ${command.name}`)
             .setFooter({text: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL({dynamic: true})})
@@ -61,8 +61,7 @@ module.exports = async (bot, interaction) => {
             .setFields(
                 { name: "Nom", value: `\`${command.name}\``, inline: true },
                 { name: "Description", value: `\`${command.description}\``, inline: true },
-                { name: "Permission requise", value: `\`${typeof command.permission !== "bigint" ? command.permission : new Discord.PermissionsBitField(command.permission).toArray(false)}\``, inline: true },
-                { name: "alex_write uniquement", value: `\`${command.ownerOnly ? "Oui" : "Non"}\``, inline: true },
+                { name: "Permission requise", value: `\`${typeof command.permission !== "bigint" ? command.permission : new PermissionsBitField(command.permission).toArray(false)}\``, inline: true },
                 { name: "Commande en DM", value: `\`${command.dm ? "Oui" : "Non"}\``, inline: true },
                 { name: "Catégorie", value: `\`${command.category}\``, inline: true }
               );
@@ -88,17 +87,17 @@ module.exports = async (bot, interaction) => {
             }
               
 
-            let Menu = new Discord.ActionRowBuilder()
+            let Menu = new ActionRowBuilder()
             .addComponents(
-                new Discord.ButtonBuilder()
+                new ButtonBuilder()
                     .setCustomId("menu")
                     .setEmoji("🏠")
                     .setLabel("Menu")
-                    .setStyle(Discord.ButtonStyle.Success)
+                    .setStyle(ButtonStyle.Success)
             )
 
             await interaction.deferUpdate()
-            await interaction.editReply({ embeds: [Embed], components: [interaction.message.components[0], interaction.message.components[1], Menu]});
+            await interaction.editReply({ embeds: [Embed], components: [interaction.message.components[0], interaction.message.components[1]/*, interaction.message.components[2]*/, Menu]});
     }
 
 
@@ -108,7 +107,7 @@ module.exports = async (bot, interaction) => {
         const selectedCommand = interaction.values[0];
         command = bot.commands.get(selectedCommand);
     
-            let Embed = new Discord.EmbedBuilder()
+            let Embed = new EmbedBuilder()
             .setColor(bot.color)
             .setTitle(`Commande ${command.name}`)
             .setFooter({text: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL({dynamic: true})})
@@ -116,24 +115,22 @@ module.exports = async (bot, interaction) => {
             .setTimestamp()
             .setFields(
                 { name: "Nom", value: `\`${command.name}\``, inline: true },
-                { name: "Permission requise", value: `\`${typeof command.permission !== "bigint" ? command.permission : new Discord.PermissionsBitField(command.permission).toArray(false)}\``, inline: true },
-                { name: "alex_write uniquement", value: `\`${command.ownerOnly ? "Oui" : "Non"}\``, inline: true },
+                { name: "Permission requise", value: `\`${typeof command.permission !== "bigint" ? command.permission : new PermissionsBitField(command.permission).toArray(false)}\``, inline: true },
                 { name: "Commande en DM", value: `\`${command.dm ? "Oui" : "Non"}\``, inline: true },
                 { name: "Catégorie", value: `\`${command.category}\``, inline: true }
               );
               
               
-    
-            let Menu = new Discord.ActionRowBuilder()
+            let Menu = new ActionRowBuilder()
             .addComponents(
-                new Discord.ButtonBuilder()
+                new ButtonBuilder()
                     .setCustomId("menu")
                     .setEmoji("🏠")
                     .setLabel("Menu")
-                    .setStyle(Discord.ButtonStyle.Success)
+                    .setStyle(ButtonStyle.Success)
             )
     
             await interaction.deferUpdate()
-            await interaction.editReply({ embeds: [Embed], components: [interaction.message.components[0], interaction.message.components[1], Menu]});
+            await interaction.editReply({ embeds: [Embed], components: [interaction.message.components[0], interaction.message.components[1]/*, interaction.message.components[2]*/, Menu]});
         }
 }

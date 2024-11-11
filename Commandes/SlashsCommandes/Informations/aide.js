@@ -1,24 +1,34 @@
-const Discord = require("discord.js")
+const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js")
 
 module.exports = {
 
     name: "aide",
+    name_localizations:({
+        'fr': 'aide',
+        'en-US': 'help',
+        'en-GB': 'help',
+    }),
     description: "Envoie les commandes du bot",
+    description_localizations:({
+        'fr': 'Envoie les commandes du bot',
+        'en-US': 'Sends bot commands',
+        'en-GB': 'Sends bot commands',
+    }),
     type: 1,
-    utilisation: "/aide",
     permission: "Aucune",
-    ownerOnly: false,
-    dm: true,
+    dm: false,
+    utilisation: "/aide",
     category: "Informations",
+    ownerOnly: false,
 
     async run(bot, message, args, db) {
 
             let categories = []
             bot.commands.forEach(command => {
-                if(!categories.includes(command.category)) categories.push(command.category)                
+                if(!categories.includes(command.category)) categories.push(command.category)
             })
 
-            let Embed = new Discord.EmbedBuilder()
+            let Embed = new EmbedBuilder()
             .setColor(bot.color)
             .setTitle(`Commandes du bot`)
             .setFooter({text: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL({dynamic: true})})
@@ -50,87 +60,69 @@ module.exports = {
             }*/
 
             //Ajouter les commandes slash dans le selectmenu
-            const selectMenuCommandes = new Discord.StringSelectMenuBuilder()
+            const selectMenuCommandes = new StringSelectMenuBuilder()
                 .setCustomId("commande_select")
                 .setPlaceholder("Sélectionnez une commande");
 
-                for (const cat of categories.sort()) {
-                    let commands = bot.commands.filter(cmd => cmd.category === cat && cmd.type === 1);
-                    const fieldValues = commands.map(cmd => `\`${cmd.utilisation}\` : ${cmd.description}`);
-                    if (fieldValues.length > 0) {
-                        const options = commands.map(command => ({
-                            label: `/${command.name}`,
-                            description: command.description,
-                            value: command.name,
-                        }));
-                        selectMenuCommandes.addOptions(options);
-                    }
-                }
+            let commands = bot.commands
+                .filter(cmd => cmd.type === 1)
+                .sort((a, b) => a.name.localeCompare(b.name))
+
+            const fieldValues = commands.map(cmd => `\`${cmd.utilisation}\` : ${cmd.description}`);
+            if (fieldValues.length > 0) {
+                const options = commands.map(command => ({
+                    label: `/${command.name}`,
+                    description: command.description,
+                    value: command.name,
+                }));
+                selectMenuCommandes.addOptions(options);
+            }
 
             // Ajouter les commandes user en dessous de l'embed
-            const selectMenuUser = new Discord.StringSelectMenuBuilder()
+            const selectMenuUser = new StringSelectMenuBuilder()
             .setCustomId("user_select")
             .setPlaceholder("Sélectionnez une application d'utilisateur")
-            .addOptions
-            (
-                {
-                label: "Profil",
-                value: "Profil",
-                }/*,
-                {
-                label: "2",
-                value: "2",
-                },
-                {
-                label: "3",
-                value: "3",
-                },
-                {
-                label: "4",
-                value: "4",
-                },
-                {
-                label: "5",
-                value: "5",
-                }*/
-            )
+
+            let commands_user = bot.commands
+            .filter(cmd => cmd.type === 2)
+            .sort((a, b) => a.name.localeCompare(b.name))
+
+            const fieldValuesUser = commands_user.map(cmd => `\`${cmd.utilisation}\` : ${cmd.description}`);
+            if (fieldValuesUser.length > 0) {
+                const options = commands_user.map(command => ({
+                    label: command.name,
+                    description: command.description,
+                    value: command.name,
+                }));
+                selectMenuUser.addOptions(options);
+            }
 
             /*// Ajouter les commandes d'application de message en dessous de l'embed
-            const selectMenuMessage = new Discord.StringSelectMenuBuilder()
+            const selectMenuMessage = new StringSelectMenuBuilder()
             .setCustomId("message_select")
             .setPlaceholder("Sélectionnez une application de message")
-            .addOptions
-            (
-                {
-                label: "1",
-                value: "1",
-                },
-                {
-                label: "2",
-                value: "2",
-                },
-                {
-                label: "3",
-                value: "3",
-                },
-                {
-                label: "4",
-                value: "4",
-                },
-                {
-                label: "5",
-                value: "5",
-                }
-            )*/
 
+            let commands_message = bot.commands
+            .filter(cmd => cmd.type === 3)
+            .sort((a, b) => a.name.localeCompare(b.name))
 
-            const actionRow = new Discord.ActionRowBuilder()
+            const fieldValuesMessage = commands_message.map(cmd => `\`${cmd.utilisation}\` : ${cmd.description}`);
+            if (fieldValuesMessage.length > 0) {
+                const options = commands_message.map(command => ({
+                    label: command.name,
+                    description: command.description,
+                    value: command.name,
+                }));
+                selectMenuMessage.addOptions(options);
+            }*/
+
+            const actionRow = new ActionRowBuilder()
             .addComponents(selectMenuCommandes)
 
-            const actionRow2 = new Discord.ActionRowBuilder()
+            const actionRow2 = new ActionRowBuilder()
             .addComponents(selectMenuUser)
 
-            /*const actionRow3 = new Discord.ActionRowBuilder()
+            /*const actionRow3 = new ActionRowBuilder()
             .addComponents(selectMenuMessage)*/
 
             await message.reply({ embeds: [Embed], components: [actionRow, actionRow2/*, actionRow3*/], ephemeral: true });
