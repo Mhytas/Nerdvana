@@ -1,7 +1,7 @@
 const { PermissionFlagsBits, ChannelType, ApplicationCommandOptionType } = require("discord.js")
 
 module.exports = {
-        
+    
     name: "recreer",
     name_localizations:({
         'fr': 'recreer',
@@ -59,7 +59,7 @@ module.exports = {
     ],
 
     async run(bot, message, args, db) {
-
+        
         let channel = args.getChannel("salon")
         if(!channel) channel = message.channel
         if(channel.id !== message.channel.id && !message.guild.channels.cache.get(channel.id)) return await message.reply({content: "Pas de salon trouvé !", ephemeral: true})
@@ -68,12 +68,12 @@ module.exports = {
         let category = args.getChannel("catégorie")
         //Prévenir l'utilisateur qu'aucune catégorie n'a été renseigné, donc son salon se supprimé
         */
-
+        
         let channel_name = channel.name
         
         await channel.clone()
         await channel.delete()
-
+        
         await message.reply({content: `Le salon ${channel_name} a bien recréer !`, ephemeral: true})
     }
 }
