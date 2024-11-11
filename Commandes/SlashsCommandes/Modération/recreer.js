@@ -5,7 +5,7 @@ module.exports = {
     name: "recreer",
     description: "Permet de recréer un salon",
     type: 1,
-    utilisation: "/channel-renew [salon]",
+    utilisation: "/recreer [salon]",
     permission: PermissionFlagsBits.ManageChannels,
     ownerOnly: false,
     dm: false,
