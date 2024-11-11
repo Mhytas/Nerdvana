@@ -9,7 +9,7 @@ module.exports = {
     permission: PermissionFlagsBits.ManageChannels,
     ownerOnly: false,
     dm: false,
-    category: "Administration",
+    category: "Modération",
     options: [
         {
             type: ApplicationCommandOptionType.Channel,
