@@ -1,30 +1,28 @@
-const { ChannelType, EmbedBuilder} = require("discord.js")
+const { ChannelType, EmbedBuilder } = require("discord.js")
 
 module.exports = async(bot, message) => {
 
     let db = bot.db;
-/*
-    if (message.content.match(new RegExp(`<@${bot.user.id}>`, 'i'))) {
-        const ping_bot = new Discord.EmbedBuilder()
-          .setColor(config.color)
-          .setTitle("🟢 NeoBot est présent !")
-          .setDescription(`**Vous avez besoin d'aide ?** :BetaTesteur:  
-Bonjour :wave: ! Tout d'abord, merci d'utiliser __SparkyBot__ ! :Age: 
-          
-    
-- Pour consulter toutes les **commandes disponibles**, il vous suffit de taper \`/\` puis de __naviguer__ parmi toutes les commandes de SparkyBot ! :Developpeur:
-    
-    
-- Pour bien débuter votre **utilisation** de __SparkyBot__, nous vous recommandons d'exécuter la commande __</aide:1169569507526844430>__ afin de voir toutes les **commandes disponibles** ! :SparkyBot:  
-    
-Si vous avez **besoin d'aide** ou si vous souhaitez simplement obtenir __plus d'informations__ sur __SparkyBot__, n'hésitez pas à rejoindre notre **serveur support** ! :emoji_89:`)
-          .setTimestamp()
-          .setFooter({ text: `Demandé par ${message.author.username}.` })
-    
-        await message.channel.send({embeds: [ping_bot]})
-      }
-    */
 
+    /*if(message.content.match(new RegExp(`<@${bot.user.id}>`, 'i'))) {
+        const ping_bot = new EmbedBuilder()
+        .setColor(bot.color)
+        .setTitle(`${bot.user.username} est présent !`)
+        .setDescription(`**Vous avez besoin d'aide ?**
+Bonjour ! :wave: Tout d'abord, merci d'utiliser __${bot.user.username}__ !
+
+- Pour consulter toutes les **commandes disponibles**, il vous suffit de taper \`/\` puis de __naviguer__ parmi toutes les commandes de ${bot.user.username} !
+
+- Pour bien débuter votre **utilisation** de __${bot.user.username}__, nous vous recommandons d'exécuter la commande __</help:1169569507526844430>__ afin de voir toutes les **commandes disponibles** !
+
+Si vous avez **besoin d'aide** ou si vous souhaitez simplement obtenir __plus d'informations__ sur __${bot.user.username}__, n'hésitez pas à rejoindre notre **serveur support** !`)
+        .setTimestamp()
+        .setFooter({ text: `Demandé par ${message.author.username}.` })
+        
+        await message.channel.send({embeds: [ping_bot]})
+    }*/
+    
+    
     await db.query(`SELECT * FROM ticket WHERE channel = '${message.channel.id}'`, async (err, req_ticket) => {
         await db.query(`UPDATE ticket SET time = '${Date.now()}' WHERE channel = '${message.channel.id}'`)
     })

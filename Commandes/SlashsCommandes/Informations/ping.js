@@ -21,7 +21,6 @@ module.exports = {
     ownerOnly: false,
     dm: true,
     category: "Informations",
-    options: [],
 
     async run(bot, message, args, db) {
         await db.query(`SELECT * FROM server WHERE guild = '${message.guild.id}'`, async (err, req_langue) => {
