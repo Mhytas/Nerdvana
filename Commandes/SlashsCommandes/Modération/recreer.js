@@ -7,7 +7,7 @@ module.exports = {
         'fr': 'recreer',
         'en-US': 'recreate',
         'en-GB': 'recreate',
-      }),
+    }),
     description: "Permet de recréer un salon",// et de sauvegarder l'ancien dans une catégorie",
     description_localizations:({
         'fr': 'Permet de recréer un salon',// et de sauvegarder l\'ancien dans une catégorie',
@@ -28,7 +28,7 @@ module.exports = {
                 'fr': 'salon',
                 'en-US': 'channel',
                 'en-GB': 'channel',
-              }),
+            }),
             description: "Salon à recréer",
             description_localizations:({
                 'fr': 'Salon à recréer',
