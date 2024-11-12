@@ -30,7 +30,7 @@ module.exports = async (bot, interaction) => {
             const selectmenu_config = await bot.function.selectmenu_config(systeme);
             const boutons_langue_bot = await bot.function.boutons_langue_bot(langue);
 
-            await interaction.deferUpdate()
+            try { await interaction.deferUpdate() } catch {}
             await interaction.editReply({embeds: [langue_bot_config],  components: [selectmenu_config, boutons_langue_bot], ephemeral: true})
         }
     })
