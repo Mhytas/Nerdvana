@@ -9,7 +9,7 @@ module.exports = async (bot, interaction) => {
                 if(langue === "fr") i18n.setLocale("fr")
                 if(langue === "en") i18n.setLocale("en")
 
-                let reloadPing = new ActionRowBuilder()
+                const reloadPing = new ActionRowBuilder()
                 .addComponents(new ButtonBuilder()
                     .setCustomId("ping")
                     .setEmoji("🔄")
@@ -28,8 +28,8 @@ module.exports = async (bot, interaction) => {
                     .setDescription(APIemoji + i18n.__("ping_message") + `**${APIPing}ms**`)
                     .setColor(bot.color)
 
-                try { await interaction.deferUpdate() } catch {}
-                await interaction.editReply({embeds: [PingEmbed], components: [reloadPing]})
+                try { interaction.deferUpdate(), console.log("test") } catch {console.log("test2")}
+                interaction.followUp({embeds: [PingEmbed], components: [reloadPing]})
             })
         }
     }
