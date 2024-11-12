@@ -28,7 +28,7 @@ module.exports = async (bot, interaction) => {
                     .setDescription(APIemoji + i18n.__("ping_message") + `**${APIPing}ms**`)
                     .setColor(bot.color)
 
-                await interaction.deferUpdate()
+                try { await interaction.deferUpdate() } catch {}
                 await interaction.editReply({embeds: [PingEmbed], components: [reloadPing]})
             })
         }
