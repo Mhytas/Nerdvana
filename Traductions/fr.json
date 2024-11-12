@@ -50,5 +50,15 @@
 	"leaderboard_invite": "Invites",
 	"leaderboard_argent": " 💰 actuellement",
 	"leaderboard_argent_record": "Record :",
-	"leaderboard_rang": "Rang"
+	"leaderboard_rang": "Rang",
+
+	"recreer_system": "recreer",
+	"recreer_erreur_pas_de_salon": "Pas de salon trouvé !",
+	"recreer_delete_message_le_salon": "Le salon",
+	"recreer_delete_message_channel": "a bien été recréer ici !",
+	"recreer_delete_message_reply_P1": "a bien été recréer ici",
+	"recreer_delete_message_reply_P2": " !",
+	"recreer_delete_message_bouton_P1": "Ce message sera supprimé dans",
+	"recreer_delete_message_bouton_P2": "secondes",
+	"recreer_delete_message_bouton_P3": "seconde"
 }

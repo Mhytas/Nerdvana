@@ -50,5 +50,15 @@
 	"leaderboard_invite": "Guests",
 	"leaderboard_argent": "💰 currently",
 	"leaderboard_argent_record": "Record :",
-	"leaderboard_rang": "Rank"
+	"leaderboard_rang": "Rank",
+
+	"recreer_system": "recreate",
+	"recreer_erreur_pas_de_salon": "No channel found!",
+	"recreer_delete_message_le_salon": "The channel",
+	"recreer_delete_message_channel": "has been successfully recreated here!",
+	"recreer_delete_message_reply_P1": "has been successfully recreated here",
+	"recreer_delete_message_reply_P2": "!",
+	"recreer_delete_message_bouton_P1": "This message will be deleted in",
+	"recreer_delete_message_bouton_P2": "seconds",
+	"recreer_delete_message_bouton_P3": "second"
 }
