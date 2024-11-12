@@ -15,12 +15,12 @@ module.exports = async (bot, interaction, args) => {
             if(langue === "fr") i18n.setLocale("fr")
             if(langue === "en") i18n.setLocale("en")
             
-            let systeme = `/${i18n.__("recreer_system")}`
+            let systeme = `/${i18n.__("clone_system")}`
             let temps_supression = 10
 
             try { await interaction.deferUpdate() } catch {}
 
-            if(interaction.customId === `Confirmer_catégorie_recreer ${id}`) {
+            if(interaction.customId === `Confirmer_catégorie_clone ${id}`) {
 
                 try { await bot.channels.fetch(id) } catch {
 
@@ -30,7 +30,7 @@ module.exports = async (bot, interaction, args) => {
                         name: `${bot.user.username} - ${systeme}`,
                         iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
                     })
-                    .setDescription(i18n.__("recreer_erreur_salon_supprimé"))
+                    .setDescription(i18n.__("clone_erreur_salon_supprimé"))
                     .setTimestamp()
                     .setFooter({text: systeme})
     
@@ -49,7 +49,7 @@ module.exports = async (bot, interaction, args) => {
                     name: `${bot.user.username} - ${systeme}`,
                     iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
                 })
-                .setDescription(`${i18n.__("recreer_delete_message_le_salon")} **${channel.name}** ${i18n.__("recreer_delete_message_channel")}`)
+                .setDescription(`${i18n.__("clone_delete_message_le_salon")} **${channel.name}** ${i18n.__("clone_delete_message_channel")}`)
                 .setTimestamp()
                 .setFooter({text: systeme})
     
@@ -59,14 +59,14 @@ module.exports = async (bot, interaction, args) => {
                     name: `${bot.user.username} - ${systeme}`,
                     iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
                 })
-                .setDescription(`${i18n.__("recreer_delete_message_le_salon")} **${channel.name}** ${i18n.__("recreer_delete_message_reply_P1")} <#${new_channel.id}>${i18n.__("recreer_delete_message_reply_P2")}`)
+                .setDescription(`${i18n.__("clone_delete_message_le_salon")} **${channel.name}** ${i18n.__("clone_delete_message_reply_P1")} <#${new_channel.id}>${i18n.__("clone_delete_message_reply_P2")}`)
                 .setTimestamp()
                 .setFooter({text: systeme})
     
                 const bouton_message = new ActionRowBuilder().addComponents(new ButtonBuilder()
-                    .setCustomId("Delete_message_recreer")
+                    .setCustomId("Delete_message_clone")
                     .setEmoji("🗑")
-                    .setLabel(`${i18n.__("recreer_delete_message_bouton_P1")} ${temps_supression} ${i18n.__("recreer_delete_message_bouton_P2")} `)
+                    .setLabel(`${i18n.__("clone_delete_message_bouton_P1")} ${temps_supression} ${i18n.__("clone_delete_message_bouton_P2")} `)
                     .setStyle(ButtonStyle.Danger)
                     .setDisabled(true)
                 )
@@ -74,17 +74,17 @@ module.exports = async (bot, interaction, args) => {
                 await new_channel.send({content: `<@${interaction.user.id}>`, embeds: [embed_channel], components: [bouton_message]})
                 .then(msg => {
     
-                    let message_secondes = i18n.__("recreer_delete_message_bouton_P2")
+                    let message_secondes = i18n.__("clone_delete_message_bouton_P2")
     
                     const countdown = setInterval(async () => {
                         temps_supression--;
                         if (temps_supression > 0) {
-                            if(temps_supression === 1 ) message_secondes = i18n.__("recreer_delete_message_bouton_P3")
+                            if(temps_supression === 1 ) message_secondes = i18n.__("clone_delete_message_bouton_P3")
                             
                                 const bouton_message = new ActionRowBuilder().addComponents(new ButtonBuilder()
-                                .setCustomId("Delete_message_recreer")
+                                .setCustomId("Delete_message_clone")
                                 .setEmoji("🗑")
-                                .setLabel(`${i18n.__("recreer_delete_message_bouton_P1")} ${temps_supression} ${message_secondes}`)
+                                .setLabel(`${i18n.__("clone_delete_message_bouton_P1")} ${temps_supression} ${message_secondes}`)
                                 .setStyle(ButtonStyle.Danger)
                                 .setDisabled(true)
                                 )
@@ -100,7 +100,7 @@ module.exports = async (bot, interaction, args) => {
                 .catch();
                 try { await interaction.editReply({embeds: [embed_message], components: [], ephemeral: true}) } catch {}
                 
-            } else if(interaction.customId === "Annuler_catégorie_recreer") {
+            } else if(interaction.customId === "Annuler_catégorie_clone") {
 
                 const embed_annuler = new EmbedBuilder()
                 .setColor("DarkRed")
@@ -108,7 +108,7 @@ module.exports = async (bot, interaction, args) => {
                     name: `${bot.user.username} - ${systeme}`,
                     iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
                 })
-                .setDescription(i18n.__("recreer_commande_annuler"))
+                .setDescription(i18n.__("clone_commande_annuler"))
                 .setTimestamp()
                 .setFooter({text: systeme})
                 

@@ -3,20 +3,20 @@ const i18n = require('i18n');
 
 module.exports = {
     
-    name: "recreer",
+    name: "clone",
     name_localizations:({
-        'fr': 'recreer',
-        'en-US': 'recreate',
-        'en-GB': 'recreate',
+        'fr': 'clone',
+        'en-US': 'clone',
+        'en-GB': 'clone',
     }),
-    description: "Permet de recréer un salon et de sauvegarder l'ancien dans une catégorie",
+    description: "Permet de cloner un salon et de sauvegarder l'ancien dans une catégorie",
     description_localizations:({
-        'fr': 'Permet de recréer un salon et de sauvegarder l\'ancien dans une catégorie',
-        'en-US': 'Allows you to recreate a room and save the old one in a category',
-        'en-GB': 'Allows you to recreate a room and save the old one in a category',
+        'fr': 'Permet de cloner un salon et de sauvegarder l\'ancien dans une catégorie',
+        'en-US': 'Allows you to clone a channel and save the old one in a category',
+        'en-GB': 'Allows you to clone a channel and save the old one in a category',
     }),
     type: 1,
-    utilisation: "/recreer (salon) (catégorie)",
+    utilisation: "/clone (salon) (catégorie)",
     permission: PermissionFlagsBits.ManageChannels,
     ownerOnly: false,
     dm: false,
@@ -30,11 +30,11 @@ module.exports = {
                 'en-US': 'channel',
                 'en-GB': 'channel',
             }),
-            description: "Salon à recréer",
+            description: "Salon à cloner",
             description_localizations:({
-                'fr': 'Salon à recréer',
-                'en-US': 'Channel to recreate',
-                'en-GB': 'Channel to recreate',
+                'fr': 'Salon à cloner',
+                'en-US': 'Channel to clone',
+                'en-GB': 'Channel to clone',
             }),
             required: false,
             channelTypes: [ChannelType.GuildText],
@@ -50,8 +50,8 @@ module.exports = {
             description: "Catégorie où sauvegarder le salon",
             description_localizations:({
                 'fr': 'Catégorie où sauvegarder le salon',
-                'en-US': 'Category where to save the room',
-                'en-GB': 'Category where to save the room',
+                'en-US': 'Category where to save the channel',
+                'en-GB': 'Category where to save the channel',
             }),
             required: false,
             channelTypes: [ChannelType.GuildCategory],
@@ -66,7 +66,7 @@ module.exports = {
             if(langue === "fr") i18n.setLocale("fr")
             if(langue === "en") i18n.setLocale("en")
 
-            let systeme = `/${i18n.__("recreer_system")}`
+            let systeme = `/${i18n.__("clone_system")}`
             let temps_supression = 10
 
             try { await message.deferReply({ ephemeral: true }) } catch {}
@@ -81,7 +81,7 @@ module.exports = {
                     name: `${bot.user.username} - ${systeme}`,
                     iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
                 })
-                .setDescription(i18n.__("recreer_erreur_pas_de_salon"))
+                .setDescription(i18n.__("clone_erreur_pas_de_salon"))
                 .setTimestamp()
                 .setFooter({text: systeme})
 
@@ -98,20 +98,20 @@ module.exports = {
                     name: `${bot.user.username} - ${systeme}`,
                     iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
                 })
-                .setDescription(i18n.__("recreer_pas_de_categorie_P1") + `**${channel.name}**` + i18n.__("recreer_pas_de_categorie_P2"))
+                .setDescription(i18n.__("clone_pas_de_categorie_P1") + `**${channel.name}**` + i18n.__("clone_pas_de_categorie_P2"))
                 .setTimestamp()
                 .setFooter({text: systeme})
 
                 const bouton_pas_de_catégorie = new ActionRowBuilder()
                 .addComponents(new ButtonBuilder()
-                    .setCustomId(`Confirmer_catégorie_recreer ${channel.id}`)
+                    .setCustomId(`Confirmer_catégorie_clone ${channel.id}`)
                     .setDisabled(false)
                     .setEmoji("✅")
                     .setLabel("Confirmer")
                     .setStyle(ButtonStyle.Success)
                 )
                 .addComponents(new ButtonBuilder()
-                    .setCustomId("Annuler_catégorie_recreer")
+                    .setCustomId("Annuler_catégorie_clone")
                     .setDisabled(false)
                     .setEmoji("✖")
                     .setLabel("Annuler")
@@ -133,7 +133,7 @@ module.exports = {
                     name: `${bot.user.username} - ${systeme}`,
                     iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
                 })
-                .setDescription(`${i18n.__("recreer_delete_message_le_salon")} **${channel_name}** ${i18n.__("recreer_delete_message_channel")}`)
+                .setDescription(`${i18n.__("clone_delete_message_le_salon")} **${channel.name}** ${i18n.__("clone_delete_message_channel")}`)
                 .setTimestamp()
                 .setFooter({text: systeme})
                 
@@ -143,14 +143,14 @@ module.exports = {
                     name: `${bot.user.username} - ${systeme}`,
                     iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
                 })
-                .setDescription(`${i18n.__("recreer_delete_message_le_salon")} **${channel_name}** ${i18n.__("recreer_delete_message_reply_P1")} <#${new_channel.id}>${i18n.__("recreer_delete_message_reply_P2")}`)
+                .setDescription(`${i18n.__("clone_delete_message_le_salon")} **${channel_name}** ${i18n.__("clone_delete_message_reply_P1")} <#${new_channel.id}>${i18n.__("clone_delete_message_reply_P2")}`)
                 .setTimestamp()
                 .setFooter({text: systeme})
                 
                 const bouton_message = new ActionRowBuilder().addComponents(new ButtonBuilder()
-                    .setCustomId("Delete_message_recreer")
+                    .setCustomId("Delete_message_clone")
                     .setEmoji("🗑")
-                    .setLabel(`${i18n.__("recreer_delete_message_bouton_P1")} ${temps_supression} ${i18n.__("recreer_delete_message_bouton_P2")} `)
+                    .setLabel(`${i18n.__("clone_delete_message_bouton_P1")} ${temps_supression} ${i18n.__("clone_delete_message_bouton_P2")} `)
                     .setStyle(ButtonStyle.Danger)
                     .setDisabled(true)
                 )
@@ -158,17 +158,17 @@ module.exports = {
                 await new_channel.send({content: `<@${message.user.id}>`, embeds: [embed_channel], components: [bouton_message]})
                 .then(msg => {
                     
-                    let message_secondes = i18n.__("recreer_delete_message_bouton_P2")
+                    let message_secondes = i18n.__("clone_delete_message_bouton_P2")
                     
                     const countdown = setInterval(async () => {
                         temps_supression--;
                         if (temps_supression > 0) {
-                            if(temps_supression === 1 ) message_secondes = i18n.__("recreer_delete_message_bouton_P3")
+                            if(temps_supression === 1 ) message_secondes = i18n.__("clone_delete_message_bouton_P3")
                             
                                 const bouton_message = new ActionRowBuilder().addComponents(new ButtonBuilder()
-                                .setCustomId("Delete_message_recreer")
+                                .setCustomId("Delete_message_clone")
                                 .setEmoji("🗑")
-                                .setLabel(`${i18n.__("recreer_delete_message_bouton_P1")} ${temps_supression} ${message_secondes}`)
+                                .setLabel(`${i18n.__("clone_delete_message_bouton_P1")} ${temps_supression} ${message_secondes}`)
                                 .setStyle(ButtonStyle.Danger)
                                 .setDisabled(true)
                                 )
