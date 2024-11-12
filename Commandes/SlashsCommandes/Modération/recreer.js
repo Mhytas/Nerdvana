@@ -130,7 +130,6 @@ module.exports = {
 
                 let message_secondes = i18n.__("recreer_delete_message_bouton_P2")
 
-                // Créer un intervalle pour mettre à jour le message chaque seconde
                 const countdown = setInterval(async () => {
                     temps_supression--;
                     if (temps_supression > 0) {
@@ -147,11 +146,10 @@ module.exports = {
                         try { await msg.edit({components: [bouton_message]}) } catch {}
                         
                     } else {
-                        // Supprimer le message une fois le compte à rebours terminé
                         try { await msg.delete().catch() } catch {}
-                        clearInterval(countdown); // Arrêter l'intervalle
+                        clearInterval(countdown)
                     }
-                }, 1000); // Exécute toutes les 1000 millisecondes (1 seconde)
+                }, 1000)
             })
             .catch();
             try { await message.editReply({embeds: [embed_message]}) } catch {}
