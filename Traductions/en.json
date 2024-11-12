@@ -54,11 +54,16 @@
 
 	"recreer_system": "recreate",
 	"recreer_erreur_pas_de_salon": "No channel found!",
+	"recreer_erreur_salon_supprimé": "The channel has been deleted!",
+	"recreer_pas_de_categorie_P1": "No category was provided, the channel ",
+	"recreer_pas_de_categorie_P2": " will be deleted!",
 	"recreer_delete_message_le_salon": "The channel",
 	"recreer_delete_message_channel": "has been successfully recreated here!",
 	"recreer_delete_message_reply_P1": "has been successfully recreated here",
 	"recreer_delete_message_reply_P2": "!",
 	"recreer_delete_message_bouton_P1": "This message will be deleted in",
 	"recreer_delete_message_bouton_P2": "seconds",
-	"recreer_delete_message_bouton_P3": "second"
+	"recreer_delete_message_bouton_P3": "second",
+	"recreer_commande_annuler": "Command cancelled!"
+
 }

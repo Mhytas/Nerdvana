@@ -54,11 +54,15 @@
 
 	"recreer_system": "recreer",
 	"recreer_erreur_pas_de_salon": "Pas de salon trouvé !",
+	"recreer_erreur_salon_supprimé": "Le salon a été supprimé !",
+	"recreer_pas_de_categorie_P1": "Aucune catégorie a été renseigné, le salon ",
+	"recreer_pas_de_categorie_P2": " sera supprimé !",
 	"recreer_delete_message_le_salon": "Le salon",
 	"recreer_delete_message_channel": "a bien été recréer ici !",
 	"recreer_delete_message_reply_P1": "a bien été recréer ici",
 	"recreer_delete_message_reply_P2": " !",
 	"recreer_delete_message_bouton_P1": "Ce message sera supprimé dans",
 	"recreer_delete_message_bouton_P2": "secondes",
-	"recreer_delete_message_bouton_P3": "seconde"
+	"recreer_delete_message_bouton_P3": "seconde",
+	"recreer_commande_annuler": "Commande annuler !"
 }

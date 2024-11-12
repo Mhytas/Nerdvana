@@ -9,14 +9,14 @@ module.exports = {
         'en-US': 'recreate',
         'en-GB': 'recreate',
     }),
-    description: "Permet de recréer un salon",// et de sauvegarder l'ancien dans une catégorie",
+    description: "Permet de recréer un salon et de sauvegarder l'ancien dans une catégorie",
     description_localizations:({
-        'fr': 'Permet de recréer un salon',// et de sauvegarder l\'ancien dans une catégorie',
-        'en-US': 'Allows you to recreate a room',// and save the old one in a category',
-        'en-GB': 'Allows you to recreate a room',// and save the old one in a category',
+        'fr': 'Permet de recréer un salon et de sauvegarder l\'ancien dans une catégorie',
+        'en-US': 'Allows you to recreate a room and save the old one in a category',
+        'en-GB': 'Allows you to recreate a room and save the old one in a category',
     }),
     type: 1,
-    utilisation: "/recreer (salon)",// (catégorie)",
+    utilisation: "/recreer (salon) (catégorie)",
     permission: PermissionFlagsBits.ManageChannels,
     ownerOnly: false,
     dm: false,
@@ -39,7 +39,7 @@ module.exports = {
             required: false,
             channelTypes: [ChannelType.GuildText],
             autocomplete: false
-        }/*, {
+        }, {
             type: ApplicationCommandOptionType.Channel,
             name: "catégorie",
             name_localizations:({
@@ -56,7 +56,7 @@ module.exports = {
             required: false,
             channelTypes: [ChannelType.GuildCategory],
             autocomplete: false
-        }*/
+        }
     ],
 
     async run(bot, message, args, db) {
@@ -69,7 +69,7 @@ module.exports = {
             let systeme = `/${i18n.__("recreer_system")}`
             let temps_supression = 10
 
-            await message.deferReply({ ephemeral: true })
+            try { await message.deferReply({ ephemeral: true }) } catch {}
             
             let channel = args.getChannel("salon")
             if(!channel) channel = message.channel
@@ -88,71 +88,102 @@ module.exports = {
                 await message.editReply({embeds: [embed_erreur_pas_de_salon], ephemeral: true})
                 return
             }
-
-            /*
+                
             let category = args.getChannel("catégorie")
-            //Prévenir l'utilisateur qu'aucune catégorie n'a été renseigné, donc son salon se supprimé
-            */
+            if(!category) {
+                
+                const embed_pas_de_catégorie = new EmbedBuilder()
+                .setColor(bot.color)
+                .setAuthor({
+                    name: `${bot.user.username} - ${systeme}`,
+                    iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
+                })
+                .setDescription(i18n.__("recreer_pas_de_categorie_P1") + `**${channel.name}**` + i18n.__("recreer_pas_de_categorie_P2"))
+                .setTimestamp()
+                .setFooter({text: systeme})
 
-            let new_channel = await channel.clone()
-            await channel.delete()
+                const bouton_pas_de_catégorie = new ActionRowBuilder()
+                .addComponents(new ButtonBuilder()
+                    .setCustomId(`Confirmer_catégorie_recreer ${channel.id}`)
+                    .setDisabled(false)
+                    .setEmoji("✅")
+                    .setLabel("Confirmer")
+                    .setStyle(ButtonStyle.Success)
+                )
+                .addComponents(new ButtonBuilder()
+                    .setCustomId("Annuler_catégorie_recreer")
+                    .setDisabled(false)
+                    .setEmoji("✖")
+                    .setLabel("Annuler")
+                    .setStyle(ButtonStyle.Danger)
+                )
 
-            const embed_channel = new EmbedBuilder()
-            .setColor(bot.color)
-            .setAuthor({
-                name: `${bot.user.username} - ${systeme}`,
-                iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
-            })
-            .setDescription(`${i18n.__("recreer_delete_message_le_salon")} **${channel.name}** ${i18n.__("recreer_delete_message_channel")}`)
-            .setTimestamp()
-            .setFooter({text: systeme})
-
-            const embed_message = new EmbedBuilder()
-            .setColor(bot.color)
-            .setAuthor({
-                name: `${bot.user.username} - ${systeme}`,
-                iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
-            })
-            .setDescription(`${i18n.__("recreer_delete_message_le_salon")} **${channel.name}** ${i18n.__("recreer_delete_message_reply_P1")} <#${new_channel.id}>${i18n.__("recreer_delete_message_reply_P2")}`)
-            .setTimestamp()
-            .setFooter({text: systeme})
-
-            const bouton_message = new ActionRowBuilder().addComponents(new ButtonBuilder()
-                .setCustomId("Delete_message_recreer")
-                .setEmoji("🗑")
-                .setLabel(`${i18n.__("recreer_delete_message_bouton_P1")} ${temps_supression} ${i18n.__("recreer_delete_message_bouton_P2")} `)
-                .setStyle(ButtonStyle.Danger)
-                .setDisabled(true)
-            )
-            
-            await new_channel.send({content: `<@${message.user.id}>`, embeds: [embed_channel], components: [bouton_message]})
-            .then(msg => {
-
-                let message_secondes = i18n.__("recreer_delete_message_bouton_P2")
-
-                const countdown = setInterval(async () => {
-                    temps_supression--;
-                    if (temps_supression > 0) {
-                        if(temps_supression === 1 ) message_secondes = i18n.__("recreer_delete_message_bouton_P3")
-                        
-                            const bouton_message = new ActionRowBuilder().addComponents(new ButtonBuilder()
-                            .setCustomId("Delete_message_recreer")
-                            .setEmoji("🗑")
-                            .setLabel(`${i18n.__("recreer_delete_message_bouton_P1")} ${temps_supression} ${message_secondes}`)
-                            .setStyle(ButtonStyle.Danger)
-                            .setDisabled(true)
-                            )
-
-                        try { await msg.edit({components: [bouton_message]}) } catch {}
-                        
-                    } else {
-                        try { await msg.delete().catch() } catch {}
-                        clearInterval(countdown)
-                    }
-                }, 1000)
-            })
-            .catch();
-            try { await message.editReply({embeds: [embed_message]}) } catch {}
+                await message.editReply({embeds: [embed_pas_de_catégorie], components: [bouton_pas_de_catégorie], ephemeral: true})
+                return
+            } else { 
+                
+                let channel_name = channel.name
+                let new_channel = await channel.clone()
+                await channel.setParent(category)
+                await channel.setName(channel_name + " backup")
+                
+                const embed_channel = new EmbedBuilder()
+                .setColor(bot.color)
+                .setAuthor({
+                    name: `${bot.user.username} - ${systeme}`,
+                    iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
+                })
+                .setDescription(`${i18n.__("recreer_delete_message_le_salon")} **${channel_name}** ${i18n.__("recreer_delete_message_channel")}`)
+                .setTimestamp()
+                .setFooter({text: systeme})
+                
+                const embed_message = new EmbedBuilder()
+                .setColor(bot.color)
+                .setAuthor({
+                    name: `${bot.user.username} - ${systeme}`,
+                    iconURL: `${bot.user.displayAvatarURL({dynamic: true})}`,
+                })
+                .setDescription(`${i18n.__("recreer_delete_message_le_salon")} **${channel_name}** ${i18n.__("recreer_delete_message_reply_P1")} <#${new_channel.id}>${i18n.__("recreer_delete_message_reply_P2")}`)
+                .setTimestamp()
+                .setFooter({text: systeme})
+                
+                const bouton_message = new ActionRowBuilder().addComponents(new ButtonBuilder()
+                    .setCustomId("Delete_message_recreer")
+                    .setEmoji("🗑")
+                    .setLabel(`${i18n.__("recreer_delete_message_bouton_P1")} ${temps_supression} ${i18n.__("recreer_delete_message_bouton_P2")} `)
+                    .setStyle(ButtonStyle.Danger)
+                    .setDisabled(true)
+                )
+                
+                await new_channel.send({content: `<@${message.user.id}>`, embeds: [embed_channel], components: [bouton_message]})
+                .then(msg => {
+                    
+                    let message_secondes = i18n.__("recreer_delete_message_bouton_P2")
+                    
+                    const countdown = setInterval(async () => {
+                        temps_supression--;
+                        if (temps_supression > 0) {
+                            if(temps_supression === 1 ) message_secondes = i18n.__("recreer_delete_message_bouton_P3")
+                            
+                                const bouton_message = new ActionRowBuilder().addComponents(new ButtonBuilder()
+                                .setCustomId("Delete_message_recreer")
+                                .setEmoji("🗑")
+                                .setLabel(`${i18n.__("recreer_delete_message_bouton_P1")} ${temps_supression} ${message_secondes}`)
+                                .setStyle(ButtonStyle.Danger)
+                                .setDisabled(true)
+                                )
+                                
+                            try { await msg.edit({components: [bouton_message]}) } catch {}
+                            
+                        } else {
+                            try { await msg.delete().catch() } catch {}
+                            clearInterval(countdown)
+                        }
+                    }, 1000)
+                })
+                .catch();
+                try { await message.editReply({embeds: [embed_message]}) } catch {}
+            }
         }
     )}
 }
