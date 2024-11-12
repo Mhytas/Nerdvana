@@ -3,13 +3,12 @@ const i18n = require('i18n');
 
 module.exports = async (bot, interaction, args) => {
     if(interaction.isButton()) {
-        let db = bot.db
-
+        
         if(!interaction.customId) return
         let customId = interaction.customId.split(" ")
         let id = customId[customId.length - 1];
-
-        await db.query(`SELECT * FROM server WHERE guild = '${interaction.guild.id}'`, async (err, req_langue) => {
+        
+        await bot.db.query(`SELECT * FROM server WHERE guild = '${interaction.guild.id}'`, async (err, req_langue) => {
 
             let langue = req_langue[0].langue
             if(langue === "fr") i18n.setLocale("fr")
