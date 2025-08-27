@@ -109,7 +109,7 @@ module.exports = async bot => {
                 })
 
                 await bot.db.query('SELECT *, COUNT(*) AS nombre_de_lignes FROM rôles_réactions GROUP BY guild_id;', function (error, results, fields) {
-                        if (error) console.error(err)
+                        if (error) console.error(error)
                         results.forEach(async row => { await bot.db.query(`UPDATE server SET number_roles_réactions = ${row.nombre_de_lignes} WHERE guild = '${row.guild_id}'`) });
                 })
         }, 5000)
