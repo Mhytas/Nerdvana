@@ -1,8 +1,9 @@
-module.exports = async prefix => {
+const CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-    let caracters = [..."abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"];
-    let ID = [];
-    for(let i = 0; i < 10; i++) ID.push(caracters[Math.floor(Math.random() * caracters.length)])
-
-    return `${prefix}-${ID.join("")}`;
-}
+module.exports = prefix => {
+    let id = "";
+    for (let i = 0; i < 10; i++) {
+        id += CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
+    }
+    return `${prefix}-${id}`;
+};
