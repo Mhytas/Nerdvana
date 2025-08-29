@@ -1,5 +1,5 @@
 require('dotenv').config();
-const Player = require("discord-player")
+//const Player = require("discord-player")
 const loadCommands = require("./Loaders/loadCommands")
 const loadEvents = require("./Loaders/loadEvents")
 const { Client, Partials, GatewayIntentBits, Collection } = require("discord.js")
@@ -48,7 +48,7 @@ const bot = new Client({
   ]
 });
 
-bot.player = new Player.Player(bot, {
+/*bot.player = new Player.Player(bot, {
   leaveOnEnd: true,
   leaveOnEmpty: true,
   initialVolume: 100,
@@ -57,7 +57,7 @@ bot.player = new Player.Player(bot, {
     quality: "highestaudio",
     highWaterMark: 1 << 25,
   },
-});
+});*/
 
 bot.commands = new Collection()
 bot.color = "#58baff";
