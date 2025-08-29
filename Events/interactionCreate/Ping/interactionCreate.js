@@ -4,7 +4,6 @@ const i18n = require('i18n');
 module.exports = async (bot, interaction) => {
     if(interaction.isButton()) {
         if(interaction.customId === "ping") {
-            await interaction.deferUpdate();
 
             bot.db.query(`SELECT * FROM server WHERE guild = '${interaction.guild.id}'`, async (err, req_langue) => {
                 let langue = req_langue[0].langue
@@ -30,6 +29,7 @@ module.exports = async (bot, interaction) => {
                     .setDescription(APIemoji + i18n.__("ping_message") + `**${APIPing}ms**`)
                     .setColor(bot.color)
 
+                await interaction.deferUpdate()
                 await interaction.followUp({embeds: [PingEmbed], components: [reloadPing]})
             })
         }
