@@ -1,15 +1,14 @@
-const Discord = require("discord.js")
-const User = new Map()
+const { PermissionFlagsBits } = require("discord.js");
+const User = new Map();
 
 module.exports = async message => {
 
-    if(message.member.permissions.has(Discord.PermissionFlagsBits.ManageMessages)) return;
+    if(message.member.permissions.has(PermissionFlagsBits.ManageMessages)) return;
 
     if(User.get(message.author.id)) {
 
         const data = User.get(message.author.id)
         let difference = message.createdTimestamp - data.lastMessage.createdTimestamp;
-        let count = data.msgCount;
 
         if(difference > 3000) {
 
@@ -25,19 +24,17 @@ module.exports = async message => {
 
         } else {
 
-            count++;
-
-            if(count > 5) {
+            if(++data.msgCount > 5) {
 
                 await message.member.timeout(300000, "Spam")
                 await message.channel.send(`**:warning: ${message.author} a été mute pendant 5 minutes car il spammé ! :warning:**`)
 
-                const messages = [...(await message.channel.messages.fetch({before: message.id})).filter(m => m.author.id === message.author.id).values()].slice(0, 10)
-                await message.channel.bulkDelete(messages)
+                const messages = await message.channel.messages.fetch({ limit: 100, before: message.id });
+                const userMessages = messages.filter(m => m.author.id === message.author.id).first(10);
+                await message.channel.bulkDelete(userMessages);
 
             } else {
 
-                data.msgCount = count;
                 User.set(message.author.id, data)
             }
         }

@@ -2,6 +2,18 @@ const { RankCardBuilder, Font, BuiltInGraphemeProvider } = require('canvacord');
 const { EmbedBuilder, AttachmentBuilder } = require("discord.js");
 const i18n = require('i18n');
 
+const XP_NEEDED = [100, 255, 475, 770, 1150, 1625, 2205, 2900, 3720, 4675,
+    5775, 7050, 8450, 10045, 11825, 13800, 15980, 18375, 20995, 23850,
+    26950, 30305, 33925, 37820, 42000, 46475, 51255, 56350, 61770, 67525,
+    73625, 80080, 86900, 94095, 101675, 109650, 118030, 126825, 136045,
+    145700, 155800, 166355, 177375, 188870, 200850, 213325, 226305, 239800,
+    253820, 268375, 281225, 296300, 311900, 328045, 344750, 362025, 379880,
+    398325, 417370, 437025, 457300, 478205, 499750, 521945, 544800, 568325,
+    592530, 617425, 643020, 669325, 696350, 724105, 752600, 781845, 811850,
+    842625, 874180, 906525, 939670, 973625, 1008375, 1043850, 1080250, 1117575,
+    1155825, 1195000, 1235100, 1276125, 1318075, 1360950, 1404750, 1449475,
+    1495125, 1541700, 1589200, 1637625, 1686975, 1737250, 1788450, 1840575];
+
 module.exports = {
     
     name: "Profil",
@@ -41,8 +53,8 @@ module.exports = {
                     if(presence == "idle") presence = "🟡"; else if(presence == i18n.__("profil_horsligne") || presence == "offline") {presence = "⚪", platform = i18n.__("profil_horsligne")} else if(presence == "online") presence = "🟢"; else if(presence == "streaming") presence = "🟣"; else if(presence == "dnd") presence = "🔴"; else if(presence == i18n.__("profil_inconnu")) {presence = "❓", platform = "❓"}
 
                     //Badges
-                    let badges = await member.user.flags.toArray().map(badge => badge.toUpperCase())
-                    if(member.user.id === await message.guild.ownerId) badges.push("SERVEROWNER")
+                    let badges = member.user.flags.toArray().map(badge => badge.toUpperCase())
+                    if(member.user.id === message.guild.ownerId) badges.push("SERVEROWNER")
                     let badgeNames = i18n.__("profil_badge")
                     if(badges.length > 1) badgeNames = i18n.__("profil_badges")
             
@@ -63,8 +75,8 @@ module.exports = {
                         SERVEROWNER: '<:SERVEROWNER:1244058462523101214>',
                     };
                     
-                    const userBadges = await badges.map(badge => flags[badge]).join(' ')
-                    const nombreRoles = await member.roles.cache.size - 1
+                    const userBadges = badges.map(badge => flags[badge]).join(' ')
+                    const nombreRoles = member.roles.cache.size - 1
                     let onlyrole = false
                     let roleName = i18n.__("profil_rôles")
                     if(nombreRoles === 0 || nombreRoles === 1) onlyrole = true
@@ -96,28 +108,15 @@ module.exports = {
                     member && onlyrole === false ? EmbedUserInfo.addFields({name: i18n.__("profil_rôle_haut"), value: `${member.roles.highest}`, inline: true}) : ""
                     member && member.nickname ? EmbedUserInfo.addFields({name: i18n.__("profil_surnom"), value: member.nickname, inline: true}) : ""
 
-                    const user = await message.guild.members.cache.get(member.id)
-                    const channel = await bot.channels.cache.get("1244233485150060665")
+                    const user = message.guild.members.cache.get(member.id)
+                    const channel = bot.channels.cache.get("1244233485150060665")
                     Font.loadDefault()
 
                     async function fonction_level (status) {
                         if(req[0].niveau === "0" && req[0].xp === "0") return await message.followUp({embeds: [EmbedUserInfo]})
 
-                        const xpNeeded = [100, 255, 475, 770, 1150, 1625, 2205, 2900, 3720, 4675, 
-                            5775, 7050, 8450, 10045, 11825, 13800, 15980, 18375, 20995, 23850, 
-                            26950, 30305, 33925, 37820, 42000, 46475, 51255, 56350, 61770, 67525, 
-                            73625, 80080, 86900, 94095, 101675, 109650, 118030, 126825, 136045, 
-                            145700, 155800, 166355, 177375, 188870, 200850, 213325, 226305, 239800, 
-                            253820, 268375, 281225, 296300, 311900, 328045, 344750, 362025, 379880,
-                            398325, 417370, 437025, 457300, 478205, 499750, 521945, 544800, 568325,
-                            592530, 617425, 643020, 669325, 696350, 724105, 752600, 781845, 811850,
-                            842625, 874180, 906525, 939670, 973625, 1008375, 1043850, 1080250, 1117575,
-                            1155825, 1195000, 1235100, 1276125, 1318075, 1360950, 1404750, 1449475,
-                            1495125, 1541700, 1589200, 1637625, 1686975, 1737250, 1788450, 1840575]
-
-                            
                         const niveaunow = parseInt(req[0].niveau)
-                        const nextLevelXP = xpNeeded[niveaunow]
+                        const nextLevelXP = XP_NEEDED[niveaunow]
                         const xpnow = parseInt(req[0].xp)
                         let place = all.findIndex(r => r.id === message.guild.id + "_" + member.id) + 1
                         
@@ -153,7 +152,7 @@ module.exports = {
                         });
                     }
     
-                    try { await fonction_level(await user.presence.status) } catch { await fonction_level("offline") }
+                    try { await fonction_level(user.presence.status) } catch { await fonction_level("offline") }
                 })
             })
         })
