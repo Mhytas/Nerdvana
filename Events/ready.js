@@ -44,13 +44,13 @@ module.exports = async bot => {
                 {statuttext = [
                         `le serveur 👀`,
                         `vos messages 👀`,
-                        `la version 1.0.0 👀`,
+                        `la version 0.0.1 👀`,
                 ]}
                 const randomText = statuttext[Math.floor(Math.random() * statuttext.length)];
                 //await bot.user.setActivity(`${randomText}`, {type: ActivityType.Streaming, url: config.link})
                 await bot.user.setPresence({ activities: [{ name: randomText, type: ActivityType.Watching}], status: 'online' });
 
-                await bot.db.query(`SELECT * FROM ticket`, async (err, req) => {
+                /*await bot.db.query(`SELECT * FROM ticket`, async (err, req) => {
                         req.forEach(async (row) => {
                                 const channel = bot.channels.cache.get(row.channel);
                                 if(!channel) return await bot.db.query(`DELETE FROM ticket WHERE channel = '${row.channel}'`)
@@ -66,7 +66,7 @@ module.exports = async bot => {
                         });
                 });
 
-                /*for(let i = 0; i < 3; i++) {
+                for(let i = 0; i < 3; i++) {
                         let table = "say"
                         if(i === 2) table = "rôles_réactions"
 
