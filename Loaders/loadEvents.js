@@ -5,9 +5,6 @@ module.exports = (bot) => {
   const eventsDir = path.join(__dirname, '..', 'Events');
   const disabledFolderName = 'Désactivés'; // Nom du dossier à ignorer
 
-  // Collectionne les gestionnaires d'événements par nom
-  const handlers = {};
-
   const loadEventFiles = (dir, parentFolderName = '') => {
     const eventFiles = fs.readdirSync(dir);
 
@@ -21,33 +18,20 @@ module.exports = (bot) => {
 
         const folderName = path.basename(filePath);
         const newParentFolderName = parentFolderName
-          ? path.join(parentFolderName, folderName)
-          : folderName;
+        ? path.join(parentFolderName, folderName)
+        : folderName;
 
         loadEventFiles(filePath, newParentFolderName); // Appel récursif pour charger les fichiers dans les sous-dossiers
       } else if (file.endsWith('.js')) {
         const event = require(filePath);
         const eventName = file.split('.')[0];
 
-        if (!handlers[eventName]) handlers[eventName] = [];
-        handlers[eventName].push(event);
-
-        const eventFolderName = parentFolderName || `Events`;
-        console.log(
-          `L'événement ${eventName} du dossier ${eventFolderName} a été chargé avec succès !`
-        );
+        bot.on(eventName, event.bind(null, bot));
+        const eventFolderName = parentFolderName || `Events`
+        console.log(`L'événement ${eventName} du dossier ${eventFolderName} a été chargé avec succès !`);
       }
     }
   };
 
   loadEventFiles(eventsDir);
-
-  // Ajoute un seul listener par événement et exécute tous les gestionnaires associés
-  for (const [eventName, eventHandlers] of Object.entries(handlers)) {
-    bot.on(eventName, (...args) => {
-      for (const handler of eventHandlers) {
-        handler(bot, ...args);
-      }
-    });
-  }
 };
