@@ -1,4 +1,6 @@
 require('dotenv').config();
+const { EventEmitter } = require('events');
+EventEmitter.defaultMaxListeners = 0;
 //const Player = require("discord-player")
 const loadCommands = require("./Loaders/loadCommands")
 const loadEvents = require("./Loaders/loadEvents")
@@ -48,7 +50,7 @@ const bot = new Client({
   ]
 });
 
-// Supprime la limite d'écouteurs pour éviter l'avertissement MaxListenersExceededWarning
+// Augmente la limite d'écouteurs du client pour éviter l'avertissement MaxListenersExceededWarning
 bot.setMaxListeners(0);
 
 /*bot.player = new Player.Player(bot, {
