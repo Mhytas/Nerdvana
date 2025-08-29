@@ -43,8 +43,8 @@ module.exports = async bot => {
         setInterval(async function () {
                 {statuttext = [
                         `le serveur 👀`,
-                        `vos messages 👀`,
-                        `la version 0.0.1 👀`,
+                        //`vos messages 👀`,
+                        `la version 0.0.1 🤖`,
                 ]}
                 const randomText = statuttext[Math.floor(Math.random() * statuttext.length)];
                 //await bot.user.setActivity(`${randomText}`, {type: ActivityType.Streaming, url: config.link})
