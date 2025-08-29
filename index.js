@@ -48,7 +48,7 @@ const bot = new Client({
   ]
 });
 
-// Increase the maximum number of listeners to avoid MaxListenersExceededWarning
+// Augmente la limite d'écouteurs pour éviter l'avertissement MaxListenersExceededWarning
 bot.setMaxListeners(20);
 
 /*bot.player = new Player.Player(bot, {
