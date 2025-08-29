@@ -1,5 +1,4 @@
 const Canvas = require("canvas");
-
 const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 module.exports = async () => {
@@ -17,4 +16,3 @@ module.exports = async () => {
 
     return { canvas, text };
 };
-
