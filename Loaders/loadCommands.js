@@ -56,11 +56,13 @@ function buildPaths(basePath, directoryTree) {
     const paths = [];
     for (const elt of directoryTree) {
         switch (typeof elt) {
-            case "object":
-                for (const subElt of buildPaths(elt.name, elt.sub)) {
-                    paths.push(pathJoin(basePath, subElt));
-                }
+            case "object": {
+                // Join the current directory name once and recurse to avoid
+                // repeatedly rebuilding intermediate paths.
+                const newBase = pathJoin(basePath, elt.name);
+                paths.push(...buildPaths(newBase, elt.sub));
                 break;
+            }
             case "string":
                 paths.push(pathJoin(basePath, elt));
                 break;
