@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const { EventEmitter } = require('events');
 //const Player = require("discord-player")
 const loadCommands = require("./Loaders/loadCommands")
