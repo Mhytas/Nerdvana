@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-
 module.exports = (bot) => {
   const eventsDir = path.join(__dirname, '..', 'Events');
   const disabledFolderName = 'Désactivés'; // Nom du dossier à ignorer
@@ -12,7 +11,6 @@ module.exports = (bot) => {
     for (const file of eventFiles) {
       const filePath = path.join(dir, file);
       const stat = fs.lstatSync(filePath);
-
       if (stat.isDirectory()) {
         // Vérifie si le dossier est "Désactivés", si c'est le cas, passe à l'itération suivante
         if (file === disabledFolderName) continue;
