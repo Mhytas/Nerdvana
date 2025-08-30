@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 module.exports = (bot) => {
-  const eventsDir = path.join(__dirname, '..', 'Event');
-  const disabledFolderName = 'Désactivés'; // Nom du dossier à ignorer
+  const eventsDir = path.join(__dirname, '..', 'Events');
+  const disabledFolderName = 'Events'; // Nom du dossier à ignorer
   const handlers = {};
 
   const loadEventFiles = (dir, parentFolderName = '') => {
